@@ -8,10 +8,13 @@ import numpy as np
 
 import vbll
 from utils import temperature_scaling
-from base import DPDDM_ABSTRACTCLASS
+from base import DPDDM_ABSTRACTMODEL
 
-class CNN_DPDDM(DPDDM_ABSTRACTCLASS):
+class CNN_DPDDM(DPDDM_ABSTRACTMODEL):
+    """DPDDM implementation with CNN features."""
+    
     def __init__(self, cfg):
+        
         super(CNN_DPDDM, self).__init__()
         
         self.init_conv = nn.Conv2d(cfg.IN_CHANNELS, cfg.MID_CHANNELS, kernel_size=cfg.KERNEL_SIZE)
