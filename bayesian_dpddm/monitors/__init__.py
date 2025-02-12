@@ -1,1 +1,1 @@
-from .bayesian_monitor import *
+from .bayesian_monitor import DPDDM_Bayesian_Monitor
