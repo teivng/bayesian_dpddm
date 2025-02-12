@@ -7,8 +7,8 @@ import torch.nn.functional as F
 import numpy as np
 
 import vbll
-from utils import temperature_scaling
-from base import DPDDM_ABSTRACTMODEL
+from .utils import temperature_scaling
+from .base import DPDDM_ABSTRACTMODEL
 
 class CNN_DPDDM(DPDDM_ABSTRACTMODEL):
     """DPDDM implementation with CNN features."""

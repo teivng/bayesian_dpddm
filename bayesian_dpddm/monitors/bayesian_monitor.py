@@ -5,10 +5,10 @@ from tqdm import tqdm
 import numpy as np
 import torch
 import torch.optim as optim
-from models import DPDDM_ABSTRACTMODEL
+from ..models import DPDDM_ABSTRACTMODEL
 from torch.utils.data import DataLoader, Dataset
 
-from utils import temperature_scaling, sample_from_dataset
+from .utils import temperature_scaling, sample_from_dataset
 
 class DPDDM_Bayesian_Monitor:
     """Defines the Bayesian DPDDM Monitor (Algorithms 3 and 4)
