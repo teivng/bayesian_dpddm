@@ -62,33 +62,3 @@ class CNN_DPDDM(DPDDM_ABSTRACTMODEL):
   
     def get_last_layer(self):
         return self.out_layer
-  
-    def compute_max_dis_rate(self, X, y, n_post_samples=5000, temperature=1):
-        X, y = X.to(self.device), y.to(self.device)
-        with torch.no_grad():
-            features = self.get_features(X)
-            ll_dist = self.out_layer.logit_predictive(features)
-            logits_samples = ll_dist.rsample(sample_shape=torch.Size([n_post_samples]))
-            
-            # scale down with temperature
-            logits_samples = temperature_scaling(logits_samples, temperature)
-            y_hat = torch.argmax(logits_samples, -1)
-            y_tile = torch.tile(y, (n_post_samples, 1)).cuda()
-            dis_mat = (y_hat != y_tile)
-            dis_rate = dis_mat.sum(dim=-1)/len(y)
-        return torch.max(dis_rate).item()
-      
-    def get_pseudolabels(self, X, n_post_samples=5000):
-        X = X.to(self.device)
-        with torch.no_grad():
-            features = self.get_features(X)
-            #ll_dist = self.params['out_layer'].logit_predictive(features)
-            # (n_post_samples, len, categories) (57, 1000, 2)
-            ll_dist = self.out_layer.logit_predictive(features)
-            '''
-            logits_samples = ll_dist.rsample(sample_shape=torch.Size([n_post_samples]))
-            logits_samples_mean = logits_samples.mean(0) # (1000, 2)
-            y_hat = torch.argmax(logits_samples_mean,  -1) # (1000,)
-            '''
-            y_hat = torch.argmax(ll_dist.loc, 1)
-        return y_hat
