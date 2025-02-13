@@ -13,7 +13,8 @@ def sample_from_dataset(n_samples:int, dataset:Dataset, device:torch.device, rep
         n_samples (int): number of samples to sample
         dataset (Dataset): torch Dataset object
         replace (bool, optional): Whether to sample with replacement. Defaults to True.
-
+clear
+s
     Returns:
         torch.tensor: sample from dataset.
     """
