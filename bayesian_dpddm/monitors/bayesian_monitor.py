@@ -57,7 +57,11 @@ class DPDDM_Bayesian_Monitor:
         
         # For DPDDM pretraining
         self.Phi = []
-    
+
+        # To device
+        self.model = self.model.to(self.device)
+        
+        
     def eval_acc(self, preds:torch.tensor, y:torch.tensor):
         """Evaluates the accuracy of the Bayesian model
 
@@ -123,7 +127,8 @@ class DPDDM_Bayesian_Monitor:
 
         return self.output_metrics
     
-    def get_pseudolabels(self, X):
+    
+    def get_pseudolabels(self, X:torch.tensor):
         """Given samples X, return pseudolabels assigned by self.model
 
         Args:
@@ -140,7 +145,8 @@ class DPDDM_Bayesian_Monitor:
             y_hat = torch.argmax(ll_dist.loc, 1)
         return y_hat
 
-    def compute_max_dis_rate(self, X, y, n_post_samples=5000, temperature=1):
+
+    def compute_max_dis_rate(self, X:torch.tensor, y:torch.tensor, n_post_samples=5000, temperature=1):
         """Approximates the maximum disagreement rate among sampled weights.
 
         Args:
@@ -168,8 +174,9 @@ class DPDDM_Bayesian_Monitor:
         return torch.max(dis_rate).item()
 
 
-    def pretrain_disagreement_distribution(self, dataset, n_post_samples=5000, data_sample_size=1000, Phi_size=500, temperature=1, tqdm_enabled=True):
+    def pretrain_disagreement_distribution(self, dataset:Dataset, n_post_samples=5000, data_sample_size=1000, Phi_size=500, temperature=1, tqdm_enabled=True):
         """Given a dataset, generates the Phi distribution of maximum disagreement rates.
+        Uses self.dpddm_test to compute Phi. 
 
         Args:
             dataset (Dataset): dataset object
@@ -179,11 +186,53 @@ class DPDDM_Bayesian_Monitor:
             temperature (int, optional): softening of the logits. Defaults to 1.
         """
         f = tqdm if tqdm_enabled else lambda x: x 
+        # save temperature
+        self.temperature = temperature
         self.model.eval()
         with torch.no_grad():
             for i in f(range(Phi_size)):
-                X = sample_from_dataset(n_samples=data_sample_size, dataset=dataset, device=self.device)
-                y_pseudo = self.get_pseudolabels(X)
-                X, y_pseudo = X.to(self.device), y_pseudo.to(self.device)
-                max_dis_rate = self.compute_max_dis_rate(X, y_pseudo, n_post_samples=n_post_samples, temperature=temperature)
+                max_dis_rate, _ = self.dpddm_test(dataset, n_post_samples, data_sample_size, self.temperature)
                 self.Phi.append(max_dis_rate)
+    
+    
+    def dpddm_test(self, dataset:Dataset, n_post_samples=5000, data_sample_size=1000, temperature=1, alpha=0.95):
+        """Given a dataset, computes the maximum disagreement rate as well as the OOD verdict.
+        Used to both generate Phi and Algorithm 4
+
+        Args:
+            dataset (Dataset): dataset object
+            n_post_samples (int, optional): number of posterior weights. Defaults to 5000.
+            data_sample_size (int, optional): size of bootstraped dataset. Defaults to 1000.
+            temperature (int, optional): softening of the logits. Defaults to 1.
+
+        Returns:
+            _type_: _description_
+        """
+        with torch.no_grad():
+            X = sample_from_dataset(n_samples=data_sample_size, dataset=dataset, device=self.device)
+            y_pseudo = self.get_pseudolabels(X)
+            X, y_pseudo = X.to(self.device), y_pseudo.to(self.device)
+            max_dis_rate = self.compute_max_dis_rate(X, y_pseudo, n_post_samples=n_post_samples, temperature=temperature)
+        return max_dis_rate, max_dis_rate >= np.quantile(self.Phi, alpha) if self.Phi != [] else 0 
+    
+    
+    def repeat_tests(self, dataset:Dataset, n_post_samples=5000, data_sample_size=1000, n_repeats=1):
+        assert self.Phi != []
+        """After training Phi, monitors D-PDD using the DPDDM test (Algorithm 4) on dataset
+    
+        Args:
+            dataset (Dataset): dataset to run DPDDM test
+            n_post_samples (int, optional): number of posterior weights. Defaults to 5000.
+            data_sample_size (int, optional): size of bootstraped dataset (few-shot evaluations). Defaults to 1000.
+            n_repeats (int, optional): number of times to repeat independent realizations of DPDDM test (TPR/FPR calculations). Defaults to 1.
+        """
+        self.model.eval()
+        with torch.no_grad():
+            tprs = []
+            max_dis_rates = []
+            for i in tqdm(range(n_repeats)):
+                max_dis_rate, result = self.dpddm_test(dataset, data_sample_size=data_sample_size, temperature=self.temperature)
+                tprs.append(result)
+                max_dis_rates.append(max_dis_rate)
+            return np.mean(tprs), max_dis_rates
+            

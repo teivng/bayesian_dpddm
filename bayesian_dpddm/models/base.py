@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 import torch
 from torch import nn as nn 
 
-class DPDDM_ABSTRACTMODEL(ABC, nn.Module):
+class DPDDM_ABSTRACTMODEL(nn.Module, ABC):
     """Defines the interface for a DPDDM model"""
     
     def __init__(self):

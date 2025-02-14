@@ -20,13 +20,13 @@ class CNN_DPDDM_Model(DPDDM_ABSTRACTMODEL):
         self.init_conv = nn.Conv2d(cfg.IN_CHANNELS, cfg.MID_CHANNELS, kernel_size=cfg.KERNEL_SIZE)
         
         self.mid_convs = nn.ModuleList(
-            [nn.Conv2d(cfg.MID_CHANNELS, cfg.MID_CHANNELS, kernel_size=cfg.KERNEL_SIZE) for _ in range(cfg.MID_LAYERS)]
+            [nn.Conv2d(cfg.MID_CHANNELS, cfg.MID_CHANNELS, kernel_size=cfg.KERNEL_SIZE, padding=1) for _ in range(cfg.MID_LAYERS)]
         )
         self.bns = nn.ModuleList(
             [nn.BatchNorm2d(cfg.MID_CHANNELS) for _ in range(cfg.MID_LAYERS)]
         )
         
-        self.fc = nn.Linear(57, cfg.HIDDEN_DIM)
+        self.fc = nn.Linear(cfg.FLATTEN_DIM, cfg.HIDDEN_DIM)
         self.out_layer = vbll.DiscClassification(cfg.HIDDEN_DIM, 
                                             cfg.OUT_FEATURES, 
                                             cfg.REG_WEIGHT, 
@@ -42,9 +42,8 @@ class CNN_DPDDM_Model(DPDDM_ABSTRACTMODEL):
     def get_features(self, x):
         # initial convolution
         x = self.dropout(self.pool(F.elu(self.init_conv(x))))
-        
         # mid convolutions with skip connections
-        for idx in range(len(self.mid_conv)):
+        for idx in range(len(self.mid_convs)):
             identity = x
             out = self.mid_convs[idx](x)
             out = self.bns[idx](out)
