@@ -13,7 +13,7 @@ readme = "README.md"
 requires-python = ">=3.11"
 classifiers = [
     "Programming Language :: Python :: 3.11",
-    "License :: OSI Approved :: MIT License",  # This classifier indicates the MIT License
+    "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 dependencies = [
@@ -25,11 +25,11 @@ dependencies = [
     'matplotlib>=3.10.0',
     'pillow>=11.0.0',
 ]
-license = { file = "LICENSE" }  # Explicitly reference the LICENSE file
+license = { file = "LICENSE" }
 
 [project.urls]
 homepage = "https://github.com/opent03/bayesian_dpddm"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["bayesian_dpddm*"]  # Includes all submodules
+include = ["bayesian_dpddm*"]
