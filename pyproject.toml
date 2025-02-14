@@ -29,5 +29,7 @@ dependencies = [
 [project.urls]
 homepage = "https://github.com/opent03/bayesian_dpddm"
 
-[tool.setuptools]
-packages = ["bayesian_dpddm"]  # Automatically find packages
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["bayesian_dpddm*"]  # Includes all submodules
+
