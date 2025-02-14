@@ -1,10 +1,7 @@
-import os 
-import sys
 from tqdm import tqdm
 
 import numpy as np
 import torch
-import torch.optim as optim
 from ..models.base import DPDDM_ABSTRACTMODEL
 from torch.utils.data import DataLoader, Dataset
 
