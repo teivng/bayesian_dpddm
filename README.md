@@ -21,7 +21,7 @@ git clone https://github.com/opent03/bayesian_dpddm.git
 cd bayesian_dpddm
 
 # Install the required dependencies
-pip install -e .
+pip install .
 ```
 
 ## Usage and Tutorials
