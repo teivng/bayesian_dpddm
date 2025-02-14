@@ -45,7 +45,6 @@ class CNN_DPDDM_Model(DPDDM_ABSTRACTMODEL):
             out = self.bns[idx](out)
             out += identity
             x = self.dropout(F.elu(out))
-            
 
         x = self.pool(x).view(x.size()[0], -1)
         x = self.dropout(F.elu(self.fc(x)))

@@ -1,3 +1,5 @@
 __pycache__/
 data/
 saved_weights/
+bayesian_dpddm.egg-info/
+
