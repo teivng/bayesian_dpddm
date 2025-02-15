@@ -3,3 +3,6 @@ data/
 saved_weights/
 bayesian_dpddm.egg-info/
 build/
+dist/
+
+
