@@ -5,5 +5,4 @@ bayesian_dpddm.egg-info/
 build/
 dist/
 slurm/
-
-
+wandb/
