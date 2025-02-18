@@ -15,4 +15,4 @@
 source ~/.bashrc
 conda activate dpddm
 which python
-wandb agent opent03-team/bayesian_dpddm-experiments/5vjligll
+wandb agent opent03-team/bayesian_dpddm/ucjq0ooa
