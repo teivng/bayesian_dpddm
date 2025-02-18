@@ -1,3 +1,8 @@
 #!/bin/bash
 
-find experiments/ -type f -name "*.slrm" -exec sed -i 's/^wandb agent .*/$1' {} +
+if [ -z "$1" ]; then
+  echo "Usage: $0 <replacement_string>"
+  exit 1
+fi
+
+find experiments/ -type f -name "*.slrm" -exec sed -i "s/^wandb agent .*/$(echo "$1" | sed 's/[\/&]/\\&/g')/" {} +
