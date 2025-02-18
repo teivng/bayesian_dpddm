@@ -11,7 +11,6 @@ class ConvModelConfig:
     kernel_size: int
     mid_layers: int
     pool_dims: int
-    flatten_dim: int
     hidden_dim: int
     dropout: float
     reg_weight: float

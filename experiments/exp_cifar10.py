@@ -1,6 +1,10 @@
 import os
 import wandb
 
+import sys
+parentdir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
+sys.path.append(parentdir)
+
 import argparse
 from bayesian_dpddm import DPDDMConvModel, DPDDMBayesianMonitor
 import torch
@@ -10,7 +14,7 @@ torch.backends.cudnn.benchmark = True
 
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-from .utils_cifar10 import get_cifar10_datasets, get_configs
+from experiments.utils_cifar10 import get_cifar10_datasets, get_configs
 
 
 # Seeding

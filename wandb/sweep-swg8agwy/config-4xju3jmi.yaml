@@ -1,0 +1,14 @@
+wandb_version: 1
+
+hidden_dim:
+  value: 64
+kernel_size:
+  value: 3
+mid_channels:
+  value: 32
+mid_layers:
+  value: 1
+reg_weight:
+  value: 0.05
+temp:
+  value: 10

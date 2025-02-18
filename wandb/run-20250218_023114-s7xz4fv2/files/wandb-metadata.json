@@ -1,0 +1,154 @@
+{
+    "os": "Linux-6.6.75-2-MANJARO-x86_64-with-glibc2.41",
+    "python": "CPython 3.11.11",
+    "heartbeatAt": "2025-02-18T07:31:14.674366",
+    "startedAt": "2025-02-18T07:31:14.042825",
+    "docker": null,
+    "args": [
+        "service",
+        "--debug",
+        "--port-filename",
+        "/tmp/tmpwghial3k/port-37418.txt",
+        "--pid",
+        "37418"
+    ],
+    "state": "running",
+    "program": "/home/viet/bayesian_dpddm/experiments/exp_cifar10.py",
+    "codePathLocal": "experiments/exp_cifar10.py",
+    "codePath": "experiments/exp_cifar10.py",
+    "git": {
+        "remote": "https://github.com/opent03/bayesian_dpddm.git",
+        "commit": "3f67960ef8704a359d4be14b100af1eb1ed712a3"
+    },
+    "email": "viet@cs.toronto.edu",
+    "root": "/home/viet/bayesian_dpddm",
+    "host": "kairi",
+    "username": null,
+    "executable": "/home/viet/anaconda3/envs/bayes/bin/python",
+    "cpu_count": 12,
+    "cpu_count_logical": 20,
+    "cpu_freq": {
+        "current": 0.8179000000000002,
+        "min": 800.0,
+        "max": 4700.0
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 0.878,
+            "min": 800.0,
+            "max": 4900.0
+        },
+        {
+            "current": 0.8,
+            "min": 800.0,
+            "max": 4900.0
+        },
+        {
+            "current": 0.799,
+            "min": 800.0,
+            "max": 4900.0
+        },
+        {
+            "current": 0.8,
+            "min": 800.0,
+            "max": 4900.0
+        },
+        {
+            "current": 0.799,
+            "min": 800.0,
+            "max": 4900.0
+        },
+        {
+            "current": 0.8,
+            "min": 800.0,
+            "max": 4900.0
+        },
+        {
+            "current": 0.8,
+            "min": 800.0,
+            "max": 4900.0
+        },
+        {
+            "current": 0.8,
+            "min": 800.0,
+            "max": 4900.0
+        },
+        {
+            "current": 0.8,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 0.8,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 0.8,
+            "min": 800.0,
+            "max": 4900.0
+        },
+        {
+            "current": 0.8,
+            "min": 800.0,
+            "max": 4900.0
+        },
+        {
+            "current": 0.8,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 0.8,
+            "min": 800.0,
+            "max": 5000.0
+        },
+        {
+            "current": 0.8,
+            "min": 800.0,
+            "max": 4900.0
+        },
+        {
+            "current": 0.8,
+            "min": 800.0,
+            "max": 4900.0
+        },
+        {
+            "current": 0.8,
+            "min": 800.0,
+            "max": 3800.0
+        },
+        {
+            "current": 0.8,
+            "min": 800.0,
+            "max": 3800.0
+        },
+        {
+            "current": 0.799,
+            "min": 800.0,
+            "max": 3800.0
+        },
+        {
+            "current": 0.8,
+            "min": 800.0,
+            "max": 3800.0
+        }
+    ],
+    "disk": {
+        "/": {
+            "total": 263546339328,
+            "used": 151102435328
+        }
+    },
+    "gpu": "NVIDIA GeForce RTX 3060 Ti",
+    "gpu_count": 1,
+    "gpu_devices": [
+        {
+            "name": "NVIDIA GeForce RTX 3060 Ti",
+            "memory_total": 8589934592
+        }
+    ],
+    "memory": {
+        "total": 33506512896
+    }
+}

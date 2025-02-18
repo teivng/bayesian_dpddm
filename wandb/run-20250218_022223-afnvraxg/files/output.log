@@ -1,0 +1,66 @@
+  2%|██▌                                                                                                                             | 1/50 [00:11<09:22, 11.48s/it]
+Epoch:  0, train loss: 3.8889
+Epoch:  0, valid loss: 1.3778
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/home/viet/bayesian_dpddm/experiments/exp_cifar10.py", line 141, in <module>
+    main()
+  File "/home/viet/bayesian_dpddm/experiments/exp_cifar10.py", line 100, in main
+    monitor.train_model(tqdm_enabled=True)
+  File "/home/viet/bayesian_dpddm/bayesian_dpddm/monitors/bayesian_monitor.py", line 92, in train_model
+    for train_step, (features, labels) in enumerate(self.trainloader):
+  File "/home/viet/anaconda3/envs/bayes/lib/python3.11/site-packages/torch/utils/data/dataloader.py", line 708, in __next__
+    data = self._next_data()
+           ^^^^^^^^^^^^^^^^^
+  File "/home/viet/anaconda3/envs/bayes/lib/python3.11/site-packages/torch/utils/data/dataloader.py", line 764, in _next_data
+    data = self._dataset_fetcher.fetch(index)  # may raise StopIteration
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/viet/anaconda3/envs/bayes/lib/python3.11/site-packages/torch/utils/data/_utils/fetch.py", line 52, in fetch
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/viet/anaconda3/envs/bayes/lib/python3.11/site-packages/torch/utils/data/_utils/fetch.py", line 52, in <listcomp>
+    data = [self.dataset[idx] for idx in possibly_batched_index]
+            ~~~~~~~~~~~~^^^^^
+  File "/home/viet/anaconda3/envs/bayes/lib/python3.11/site-packages/torchvision/datasets/cifar.py", line 119, in __getitem__
+    img = self.transform(img)
+          ^^^^^^^^^^^^^^^^^^^
+  File "/home/viet/anaconda3/envs/bayes/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/viet/anaconda3/envs/bayes/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/viet/anaconda3/envs/bayes/lib/python3.11/site-packages/torchvision/transforms/v2/_container.py", line 51, in forward
+    outputs = transform(*inputs)
+              ^^^^^^^^^^^^^^^^^^
+  File "/home/viet/anaconda3/envs/bayes/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/viet/anaconda3/envs/bayes/lib/python3.11/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/viet/anaconda3/envs/bayes/lib/python3.11/site-packages/torchvision/transforms/v2/_transform.py", line 68, in forward
+    flat_outputs = [
+                   ^
+  File "/home/viet/anaconda3/envs/bayes/lib/python3.11/site-packages/torchvision/transforms/v2/_transform.py", line 69, in <listcomp>
+    self.transform(inpt, params) if needs_transform else inpt
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/viet/anaconda3/envs/bayes/lib/python3.11/site-packages/torchvision/transforms/v2/_misc.py", line 165, in transform
+    return self._call_kernel(F.normalize, inpt, mean=self.mean, std=self.std, inplace=self.inplace)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/viet/anaconda3/envs/bayes/lib/python3.11/site-packages/torchvision/transforms/v2/_transform.py", line 49, in _call_kernel
+    return kernel(inpt, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/viet/anaconda3/envs/bayes/lib/python3.11/site-packages/torchvision/transforms/v2/functional/_utils.py", line 32, in wrapper
+    return tv_tensors.wrap(output, like=inpt)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/viet/anaconda3/envs/bayes/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 747, in _fn
+    _maybe_set_eval_frame(prior)
+  File "/home/viet/anaconda3/envs/bayes/lib/python3.11/site-packages/torch/_dynamo/eval_frame.py", line 115, in _maybe_set_eval_frame
+    if not justknobs_check("pytorch/compiler:enable_compiler_set_eval_frame"):
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/viet/anaconda3/envs/bayes/lib/python3.11/site-packages/torch/_utils_internal.py", line 174, in justknobs_check
+    def justknobs_check(name: str, default: bool = True) -> bool:
+
+KeyboardInterrupt
