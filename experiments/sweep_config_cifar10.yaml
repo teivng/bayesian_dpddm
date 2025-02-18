@@ -1,3 +1,4 @@
+project: bayesian_dpddm
 program: experiments/exp_cifar10.py
 method: bayes  
 metric:
