@@ -23,13 +23,13 @@ def filter_args(cls, args):
 
 
 def get_configs(args:argparse.Namespace):
-    """From parsed arguments, generate ModelConfig and TrainConfig configs for the experiment.
+    """From parsed arguments, generate ConvModelConfig and TrainConfig configs for the experiment.
 
     Args:
         args (argparse.Namespace): parsed argument
 
     Returns:
-        tuple(ModelConfig, TrainConfig): 2-tuple containing:
+        tuple(ConvModelConfig, TrainConfig): 2-tuple containing:
         the model and train configs respectively.
     """
     model_config = ConvModelConfig(**filter_args(ConvModelConfig, args))
