@@ -164,3 +164,256 @@ slurmstepd: error: *** JOB 14931662 ON gpu160 CANCELLED AT 2025-02-18T02:58:41 *
 slurmstepd: error: *** JOB 14931660 ON gpu129 CANCELLED AT 2025-02-18T02:58:41 ***
 slurmstepd: error: *** JOB 14931663 ON gpu150 CANCELLED AT 2025-02-18T02:58:41 ***
 slurmstepd: error: *** JOB 14931659 ON gpu089 CANCELLED AT 2025-02-18T02:58:41 ***
+wandb: Starting wandb agent 🕵️
+2025-02-18 03:03:02,865 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 03:03:03,077 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 03:03:03,078 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 128
+	kernel_size: 5
+	mid_channels: 128
+	mid_layers: 1
+	reg_weight: 0.05
+	temp: 1
+2025-02-18 03:03:03,085 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=128 --kernel_size=5 --mid_channels=128 --mid_layers=1 --reg_weight=0.05 --temp=1
+2025-02-18 03:03:08,113 - wandb.wandb_agent - INFO - Running runs: ['k30ufeud']
+wandb: Currently logged in as: opent03 (opent03-team) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: WARNING Ignoring project 'bayesian_dpddm' when running a sweep.
+wandb: Tracking run with wandb version 0.19.6
+wandb: Run data is saved locally in /fs01/home/opent03/bayesian_dpddm/wandb/run-20250218_030322-k30ufeud
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run glad-sweep-1
+wandb: ⭐️ View project at https://wandb.ai/opent03-team/bayesian_dpddm
+wandb: 🧹 View sweep at https://wandb.ai/opent03-team/bayesian_dpddm/sweeps/ucjq0ooa
+wandb: 🚀 View run at https://wandb.ai/opent03-team/bayesian_dpddm/runs/k30ufeud
+  0%|          | 0/50 [00:00<?, ?it/s]wandb: Starting wandb agent 🕵️
+2025-02-18 03:03:54,706 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 03:03:54,906 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 03:03:54,906 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 32
+	kernel_size: 3
+	mid_channels: 16
+	mid_layers: 1
+	reg_weight: 0.05
+	temp: 1
+2025-02-18 03:03:54,915 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=32 --kernel_size=3 --mid_channels=16 --mid_layers=1 --reg_weight=0.05 --temp=1
+wandb: Starting wandb agent 🕵️
+wandb: Starting wandb agent 🕵️
+wandb: Starting wandb agent 🕵️
+wandb: Starting wandb agent 🕵️
+2025-02-18 03:03:59,946 - wandb.wandb_agent - INFO - Running runs: ['9qe8wf13']
+2025-02-18 03:04:00,768 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 03:04:00,959 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 03:04:01,055 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 03:04:01,065 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 64
+	kernel_size: 3
+	mid_channels: 16
+	mid_layers: 3
+	reg_weight: 0.005
+	temp: 1
+2025-02-18 03:04:01,092 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=64 --kernel_size=3 --mid_channels=16 --mid_layers=3 --reg_weight=0.005 --temp=1
+2025-02-18 03:04:01,244 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 03:04:01,253 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 128
+	kernel_size: 5
+	mid_channels: 128
+	mid_layers: 4
+	reg_weight: 0.0005
+	temp: 1
+2025-02-18 03:04:01,281 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=128 --kernel_size=5 --mid_channels=128 --mid_layers=4 --reg_weight=0.0005 --temp=1
+2025-02-18 03:04:02,772 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 03:04:02,780 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 03:04:03,167 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 03:04:03,167 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 32
+	kernel_size: 3
+	mid_channels: 32
+	mid_layers: 2
+	reg_weight: 0.0005
+	temp: 1
+2025-02-18 03:04:03,197 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=32 --kernel_size=3 --mid_channels=32 --mid_layers=2 --reg_weight=0.0005 --temp=1
+2025-02-18 03:04:03,407 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 03:04:03,407 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 128
+	kernel_size: 3
+	mid_channels: 16
+	mid_layers: 3
+	reg_weight: 0.005
+	temp: 100
+2025-02-18 03:04:03,411 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=128 --kernel_size=3 --mid_channels=16 --mid_layers=3 --reg_weight=0.005 --temp=100
+2025-02-18 03:04:06,112 - wandb.wandb_agent - INFO - Running runs: ['jn3cy6sc']
+2025-02-18 03:04:06,298 - wandb.wandb_agent - INFO - Running runs: ['6ptcul78']
+2025-02-18 03:04:08,214 - wandb.wandb_agent - INFO - Running runs: ['90sgaokn']
+2025-02-18 03:04:08,431 - wandb.wandb_agent - INFO - Running runs: ['knok0fbw']
+wandb: Currently logged in as: opent03 (opent03-team) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: WARNING Ignoring project 'bayesian_dpddm' when running a sweep.
+wandb: Currently logged in as: opent03 (opent03-team) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: Currently logged in as: opent03 (opent03-team) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: WARNING Ignoring project 'bayesian_dpddm' when running a sweep.
+wandb: WARNING Ignoring project 'bayesian_dpddm' when running a sweep.
+wandb: Currently logged in as: opent03 (opent03-team) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: WARNING Ignoring project 'bayesian_dpddm' when running a sweep.
+wandb: Currently logged in as: opent03 (opent03-team) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: WARNING Ignoring project 'bayesian_dpddm' when running a sweep.
+wandb: Tracking run with wandb version 0.19.6
+wandb: Run data is saved locally in /fs01/home/opent03/bayesian_dpddm/wandb/run-20250218_030412-9qe8wf13
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run sunny-sweep-2
+wandb: ⭐️ View project at https://wandb.ai/opent03-team/bayesian_dpddm
+wandb: 🧹 View sweep at https://wandb.ai/opent03-team/bayesian_dpddm/sweeps/ucjq0ooa
+wandb: 🚀 View run at https://wandb.ai/opent03-team/bayesian_dpddm/runs/9qe8wf13
+  0%|          | 0/50 [00:00<?, ?it/s]wandb: Tracking run with wandb version 0.19.6
+wandb: Run data is saved locally in /fs01/home/opent03/bayesian_dpddm/wandb/run-20250218_030417-knok0fbw
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run sweepy-sweep-6
+wandb: ⭐️ View project at https://wandb.ai/opent03-team/bayesian_dpddm
+wandb: 🧹 View sweep at https://wandb.ai/opent03-team/bayesian_dpddm/sweeps/ucjq0ooa
+wandb: 🚀 View run at https://wandb.ai/opent03-team/bayesian_dpddm/runs/knok0fbw
+wandb: Tracking run with wandb version 0.19.6
+wandb: Run data is saved locally in /fs01/home/opent03/bayesian_dpddm/wandb/run-20250218_030417-90sgaokn
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run helpful-sweep-5
+wandb: ⭐️ View project at https://wandb.ai/opent03-team/bayesian_dpddm
+wandb: 🧹 View sweep at https://wandb.ai/opent03-team/bayesian_dpddm/sweeps/ucjq0ooa
+wandb: 🚀 View run at https://wandb.ai/opent03-team/bayesian_dpddm/runs/90sgaokn
+wandb: Tracking run with wandb version 0.19.6
+wandb: Run data is saved locally in /fs01/home/opent03/bayesian_dpddm/wandb/run-20250218_030416-6ptcul78
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run denim-sweep-4
+wandb: ⭐️ View project at https://wandb.ai/opent03-team/bayesian_dpddm
+wandb: 🧹 View sweep at https://wandb.ai/opent03-team/bayesian_dpddm/sweeps/ucjq0ooa
+wandb: 🚀 View run at https://wandb.ai/opent03-team/bayesian_dpddm/runs/6ptcul78
+wandb: Tracking run with wandb version 0.19.6
+wandb: Run data is saved locally in /fs01/home/opent03/bayesian_dpddm/wandb/run-20250218_030416-jn3cy6sc
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run crisp-sweep-3
+wandb: ⭐️ View project at https://wandb.ai/opent03-team/bayesian_dpddm
+wandb: 🧹 View sweep at https://wandb.ai/opent03-team/bayesian_dpddm/sweeps/ucjq0ooa
+wandb: 🚀 View run at https://wandb.ai/opent03-team/bayesian_dpddm/runs/jn3cy6sc
+  2%|▏         | 1/50 [00:51<41:58, 51.40s/it]  0%|          | 0/50 [00:00<?, ?it/s]  0%|          | 0/50 [00:00<?, ?it/s]  0%|          | 0/50 [00:00<?, ?it/s]  0%|          | 0/50 [00:00<?, ?it/s]wandb: Starting wandb agent 🕵️
+wandb: Starting wandb agent 🕵️
+2025-02-18 03:04:51,949 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 03:04:52,136 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 03:04:52,136 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 128
+	kernel_size: 3
+	mid_channels: 64
+	mid_layers: 1
+	reg_weight: 0.0005
+	temp: 10
+2025-02-18 03:04:52,162 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=128 --kernel_size=3 --mid_channels=64 --mid_layers=1 --reg_weight=0.0005 --temp=10
+2025-02-18 03:04:55,043 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 03:04:55,569 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 03:04:55,569 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 128
+	kernel_size: 7
+	mid_channels: 32
+	mid_layers: 1
+	reg_weight: 0.005
+	temp: 200
+2025-02-18 03:04:55,598 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=128 --kernel_size=7 --mid_channels=32 --mid_layers=1 --reg_weight=0.005 --temp=200
+2025-02-18 03:04:57,181 - wandb.wandb_agent - INFO - Running runs: ['0v93b7vj']
+2025-02-18 03:05:00,627 - wandb.wandb_agent - INFO - Running runs: ['jbcujmch']
+wandb: Currently logged in as: opent03 (opent03-team) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: WARNING Ignoring project 'bayesian_dpddm' when running a sweep.
+  2%|▏         | 1/50 [00:38<31:40, 38.79s/it]  2%|▏         | 1/50 [00:43<35:43, 43.75s/it]  2%|▏         | 1/50 [00:39<32:36, 39.93s/it]wandb: Currently logged in as: opent03 (opent03-team) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: WARNING Ignoring project 'bayesian_dpddm' when running a sweep.
+  4%|▍         | 2/50 [01:36<37:57, 47.45s/it]  2%|▏         | 1/50 [00:45<37:02, 45.36s/it]  2%|▏         | 1/50 [00:45<37:26, 45.85s/it]wandb: Tracking run with wandb version 0.19.6
+wandb: Run data is saved locally in /fs01/home/opent03/bayesian_dpddm/wandb/run-20250218_030510-0v93b7vj
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run soft-sweep-7
+wandb: ⭐️ View project at https://wandb.ai/opent03-team/bayesian_dpddm
+wandb: 🧹 View sweep at https://wandb.ai/opent03-team/bayesian_dpddm/sweeps/ucjq0ooa
+wandb: 🚀 View run at https://wandb.ai/opent03-team/bayesian_dpddm/runs/0v93b7vj
+  0%|          | 0/50 [00:00<?, ?it/s]wandb: Tracking run with wandb version 0.19.6
+wandb: Run data is saved locally in /fs01/home/opent03/bayesian_dpddm/wandb/run-20250218_030516-jbcujmch
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run young-sweep-8
+wandb: ⭐️ View project at https://wandb.ai/opent03-team/bayesian_dpddm
+wandb: 🧹 View sweep at https://wandb.ai/opent03-team/bayesian_dpddm/sweeps/ucjq0ooa
+wandb: 🚀 View run at https://wandb.ai/opent03-team/bayesian_dpddm/runs/jbcujmch
+  0%|          | 0/50 [00:00<?, ?it/s]  4%|▍         | 2/50 [01:13<29:05, 36.36s/it]  4%|▍         | 2/50 [01:14<29:38, 37.05s/it]  4%|▍         | 2/50 [01:22<32:41, 40.87s/it]  4%|▍         | 2/50 [01:24<33:23, 41.74s/it]  4%|▍         | 2/50 [01:26<34:25, 43.03s/it]  6%|▌         | 3/50 [02:20<36:07, 46.13s/it]  2%|▏         | 1/50 [00:39<32:17, 39.55s/it]  2%|▏         | 1/50 [00:45<36:54, 45.19s/it]  6%|▌         | 3/50 [01:48<28:02, 35.80s/it]  6%|▌         | 3/50 [01:50<28:20, 36.18s/it]  6%|▌         | 3/50 [02:00<31:03, 39.66s/it]  6%|▌         | 3/50 [02:04<32:01, 40.89s/it]wandb: Starting wandb agent 🕵️
+  6%|▌         | 3/50 [02:07<32:46, 41.83s/it]wandb: Starting wandb agent 🕵️
+2025-02-18 03:06:45,351 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 03:06:45,742 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 03:06:45,742 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 64
+	kernel_size: 7
+	mid_channels: 128
+	mid_layers: 3
+	reg_weight: 0.05
+	temp: 100
+2025-02-18 03:06:45,755 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=64 --kernel_size=7 --mid_channels=128 --mid_layers=3 --reg_weight=0.05 --temp=100
+  8%|▊         | 4/50 [03:05<34:59, 45.63s/it]  4%|▍         | 2/50 [01:16<30:10, 37.73s/it]2025-02-18 03:06:49,591 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 03:06:49,863 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 03:06:49,863 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 128
+	kernel_size: 7
+	mid_channels: 16
+	mid_layers: 4
+	reg_weight: 0.0005
+	temp: 50
+2025-02-18 03:06:49,894 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=128 --kernel_size=7 --mid_channels=16 --mid_layers=4 --reg_weight=0.0005 --temp=50
+2025-02-18 03:06:50,776 - wandb.wandb_agent - INFO - Running runs: ['c84zdtjo']
+  4%|▍         | 2/50 [01:24<33:31, 41.90s/it]2025-02-18 03:06:54,915 - wandb.wandb_agent - INFO - Running runs: ['59pg589i']
+  8%|▊         | 4/50 [02:25<27:24, 35.76s/it]wandb: Currently logged in as: opent03 (opent03-team) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: WARNING Ignoring project 'bayesian_dpddm' when running a sweep.
+  8%|▊         | 4/50 [02:27<28:20, 36.96s/it]wandb: Currently logged in as: opent03 (opent03-team) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: WARNING Ignoring project 'bayesian_dpddm' when running a sweep.
+  8%|▊         | 4/50 [02:38<29:57, 39.07s/it]wandb: Tracking run with wandb version 0.19.6
+wandb: Run data is saved locally in /fs01/home/opent03/bayesian_dpddm/wandb/run-20250218_030700-59pg589i
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run dandy-sweep-10
+wandb: ⭐️ View project at https://wandb.ai/opent03-team/bayesian_dpddm
+wandb: 🧹 View sweep at https://wandb.ai/opent03-team/bayesian_dpddm/sweeps/ucjq0ooa
+wandb: 🚀 View run at https://wandb.ai/opent03-team/bayesian_dpddm/runs/59pg589i
+  0%|          | 0/50 [00:00<?, ?it/s]  8%|▊         | 4/50 [02:44<30:59, 40.42s/it]wandb: Tracking run with wandb version 0.19.6
+wandb: Run data is saved locally in /fs01/home/opent03/bayesian_dpddm/wandb/run-20250218_030703-c84zdtjo
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run clear-sweep-9
+wandb: ⭐️ View project at https://wandb.ai/opent03-team/bayesian_dpddm
+wandb: 🧹 View sweep at https://wandb.ai/opent03-team/bayesian_dpddm/sweeps/ucjq0ooa
+wandb: 🚀 View run at https://wandb.ai/opent03-team/bayesian_dpddm/runs/c84zdtjo
+  0%|          | 0/50 [00:00<?, ?it/s]  8%|▊         | 4/50 [02:47<31:40, 41.31s/it]  6%|▌         | 3/50 [01:51<28:53, 36.89s/it] 10%|█         | 5/50 [03:48<33:30, 44.69s/it]  6%|▌         | 3/50 [02:03<31:48, 40.61s/it] 10%|█         | 5/50 [02:59<26:31, 35.37s/it] 10%|█         | 5/50 [03:03<27:26, 36.60s/it] 10%|█         | 5/50 [03:15<28:38, 38.18s/it]  2%|▏         | 1/50 [00:42<34:23, 42.12s/it] 10%|█         | 5/50 [03:24<30:10, 40.22s/it]  8%|▊         | 4/50 [02:28<28:06, 36.66s/it] 10%|█         | 5/50 [03:28<30:40, 40.90s/it] 12%|█▏        | 6/50 [03:34<25:47, 35.16s/it]  8%|▊         | 4/50 [02:43<30:48, 40.18s/it] 12%|█▏        | 6/50 [04:31<32:22, 44.14s/it] 12%|█▏        | 6/50 [03:39<26:49, 36.57s/it]  2%|▏         | 1/50 [00:55<44:55, 55.01s/it] 12%|█▏        | 6/50 [03:53<27:51, 38.00s/it]wandb: Starting wandb agent 🕵️
+wandb: Starting wandb agent 🕵️
+ 10%|█         | 5/50 [03:03<27:13, 36.30s/it]  4%|▍         | 2/50 [01:22<32:43, 40.91s/it] 12%|█▏        | 6/50 [04:03<29:24, 40.10s/it]2025-02-18 03:08:41,216 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 03:08:41,225 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 03:08:41,484 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 03:08:41,484 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 64
+	kernel_size: 7
+	mid_channels: 32
+	mid_layers: 2
+	reg_weight: 0.05
+	temp: 10
+2025-02-18 03:08:41,493 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=64 --kernel_size=7 --mid_channels=32 --mid_layers=2 --reg_weight=0.05 --temp=10
+2025-02-18 03:08:41,618 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 03:08:41,618 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 64
+	kernel_size: 7
+	mid_channels: 16
+	mid_layers: 4
+	reg_weight: 0.0005
+	temp: 10
+2025-02-18 03:08:41,622 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=64 --kernel_size=7 --mid_channels=16 --mid_layers=4 --reg_weight=0.0005 --temp=10
+ 12%|█▏        | 6/50 [04:08<29:51, 40.72s/it] 14%|█▍        | 7/50 [04:09<25:03, 34.96s/it]2025-02-18 03:08:46,514 - wandb.wandb_agent - INFO - Running runs: ['th63ins7']
+2025-02-18 03:08:46,643 - wandb.wandb_agent - INFO - Running runs: ['7we8ai6y']
+ 14%|█▍        | 7/50 [04:15<26:00, 36.30s/it] 10%|█         | 5/50 [03:22<29:56, 39.91s/it] 14%|█▍        | 7/50 [05:15<31:36, 44.10s/it]wandb: Currently logged in as: opent03 (opent03-team) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: WARNING Ignoring project 'bayesian_dpddm' when running a sweep.
+wandb: Currently logged in as: opent03 (opent03-team) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: WARNING Ignoring project 'bayesian_dpddm' when running a sweep.
+ 14%|█▍        | 7/50 [04:30<27:02, 37.74s/it]  4%|▍         | 2/50 [01:43<41:02, 51.30s/it]wandb: Tracking run with wandb version 0.19.6
+wandb: Run data is saved locally in /fs01/home/opent03/bayesian_dpddm/wandb/run-20250218_030857-7we8ai6y
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run swept-sweep-12
+wandb: ⭐️ View project at https://wandb.ai/opent03-team/bayesian_dpddm
+wandb: 🧹 View sweep at https://wandb.ai/opent03-team/bayesian_dpddm/sweeps/ucjq0ooa
+wandb: 🚀 View run at https://wandb.ai/opent03-team/bayesian_dpddm/runs/7we8ai6y
+wandb: Tracking run with wandb version 0.19.6
+wandb: Run data is saved locally in /fs01/home/opent03/bayesian_dpddm/wandb/run-20250218_030857-th63ins7
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run polar-sweep-11
+wandb: ⭐️ View project at https://wandb.ai/opent03-team/bayesian_dpddm
+wandb: 🧹 View sweep at https://wandb.ai/opent03-team/bayesian_dpddm/sweeps/ucjq0ooa
+wandb: 🚀 View run at https://wandb.ai/opent03-team/bayesian_dpddm/runs/th63ins7
+ 12%|█▏        | 6/50 [03:39<26:31, 36.16s/it]  0%|          | 0/50 [00:00<?, ?it/s]  0%|          | 0/50 [00:00<?, ?it/s]  6%|▌         | 3/50 [02:01<31:22, 40.05s/it] 16%|█▌        | 8/50 [04:43<24:21, 34.81s/it] 14%|█▍        | 7/50 [04:43<28:38, 39.97s/it] 14%|█▍        | 7/50 [04:48<28:58, 40.43s/it] 16%|█▌        | 8/50 [04:50<25:03, 35.80s/it] 12%|█▏        | 6/50 [04:01<28:54, 39.43s/it] 16%|█▌        | 8/50 [05:08<26:29, 37.84s/it] 16%|█▌        | 8/50 [05:59<30:53, 44.14s/it] 14%|█▍        | 7/50 [04:16<25:57, 36.21s/it] 18%|█▊        | 9/50 [05:18<23:48, 34.84s/it]  2%|▏         | 1/50 [00:38<31:28, 38.53s/it]  2%|▏         | 1/50 [00:39<32:07, 39.33s/it]  6%|▌         | 3/50 [02:31<39:03, 49.86s/it]  8%|▊         | 4/50 [02:40<30:34, 39.87s/it] 16%|█▌        | 8/50 [05:23<27:52, 39.82s/it] 18%|█▊        | 9/50 [05:25<24:17, 35.56s/it] 16%|█▌        | 8/50 [05:29<28:25, 40.60s/it] 14%|█▍        | 7/50 [04:40<28:09, 39.30s/it] 18%|█▊        | 9/50 [05:45<25:42, 37.62s/it] 16%|█▌        | 8/50 [04:52<25:17, 36.14s/it] 18%|█▊        | 9/50 [06:43<30:06, 44.07s/it]  4%|▍         | 2/50 [01:13<28:58, 36.22s/it] 20%|██        | 10/50 [05:54<23:27, 35.19s/it]  4%|▍         | 2/50 [01:14<29:23, 36.75s/it] 20%|██        | 10/50 [06:00<23:40, 35.52s/it] 10%|█         | 5/50 [03:20<29:55, 39.90s/it] 18%|█▊        | 9/50 [06:03<27:14, 39.86s/it]  8%|▊         | 4/50 [03:19<37:32, 48.96s/it] 18%|█▊        | 9/50 [06:08<27:30, 40.26s/it] 16%|█▌        | 8/50 [05:19<27:28, 39.24s/it] 20%|██        | 10/50 [06:22<24:52, 37.31s/it] 18%|█▊        | 9/50 [05:27<24:37, 36.03s/it]  6%|▌         | 3/50 [01:47<27:47, 35.49s/it] 22%|██▏       | 11/50 [06:29<22:45, 35.00s/it]  6%|▌         | 3/50 [01:50<28:32, 36.43s/it] 22%|██▏       | 11/50 [06:35<22:58, 35.34s/it] 20%|██        | 10/50 [07:28<29:33, 44.33s/it] 12%|█▏        | 6/50 [03:59<29:03, 39.63s/it] 20%|██        | 10/50 [06:42<26:35, 39.88s/it] 20%|██        | 10/50 [06:46<26:17, 39.44s/it] 18%|█▊        | 9/50 [05:58<26:49, 39.25s/it] 10%|█         | 5/50 [04:07<36:25, 48.57s/it] 22%|██▏       | 11/50 [07:00<24:24, 37.55s/it]  8%|▊         | 4/50 [02:22<26:52, 35.05s/it] 20%|██        | 10/50 [06:04<24:04, 36.11s/it] 24%|██▍       | 12/50 [07:03<22:04, 34.86s/it]  8%|▊         | 4/50 [02:26<27:46, 36.23s/it] 24%|██▍       | 12/50 [07:11<22:28, 35.49s/it] 14%|█▍        | 7/50 [04:39<28:23, 39.63s/it] 22%|██▏       | 11/50 [08:13<28:52, 44.41s/it] 22%|██▏       | 11/50 [07:22<25:56, 39.90s/it] 22%|██▏       | 11/50 [07:24<25:23, 39.06s/it] 20%|██        | 10/50 [06:38<26:15, 39.38s/it] 24%|██▍       | 12/50 [07:37<23:45, 37.52s/it] 10%|█         | 5/50 [02:56<26:08, 34.86s/it] 22%|██▏       | 11/50 [06:39<23:18, 35.86s/it] 26%|██▌       | 13/50 [07:39<21:36, 35.04s/it] 12%|█▏        | 6/50 [04:54<35:13, 48.03s/it] 10%|█         | 5/50 [03:03<27:23, 36.53s/it] 26%|██▌       | 13/50 [07:46<21:50, 35.43s/it] 16%|█▌        | 8/50 [05:19<27:46, 39.68s/it] 24%|██▍       | 12/50 [08:02<24:31, 38.71s/it] 24%|██▍       | 12/50 [08:02<25:16, 39.90s/it] 24%|██▍       | 12/50 [08:57<28:00, 44.22s/it] 26%|██▌       | 13/50 [08:14<22:54, 37.15s/it] 12%|█▏        | 6/50 [03:30<25:21, 34.58s/it] 22%|██▏       | 11/50 [07:17<25:33, 39.33s/it] 24%|██▍       | 12/50 [07:14<22:31, 35.56s/it] 28%|██▊       | 14/50 [08:13<20:56, 34.90s/it] 12%|█▏        | 6/50 [03:38<26:30, 36.14s/it] 28%|██▊       | 14/50 [08:21<21:10, 35.30s/it] 14%|█▍        | 7/50 [05:41<34:20, 47.91s/it] 18%|█▊        | 9/50 [05:58<27:01, 39.56s/it] 26%|██▌       | 13/50 [08:40<23:50, 38.66s/it] 26%|██▌       | 13/50 [08:42<24:38, 39.97s/it] 14%|█▍        | 7/50 [04:05<24:44, 34.52s/it] 28%|██▊       | 14/50 [08:50<22:06, 36.84s/it] 30%|███       | 15/50 [08:48<20:16, 34.74s/it] 26%|██▌       | 13/50 [07:49<21:53, 35.51s/it] 26%|██▌       | 13/50 [09:42<27:25, 44.46s/it] 24%|██▍       | 12/50 [07:56<24:54, 39.32s/it] 14%|█▍        | 7/50 [04:14<25:43, 35.90s/it] 30%|███       | 15/50 [08:56<20:33, 35.23s/it] 16%|█▌        | 8/50 [06:28<33:11, 47.42s/it] 20%|██        | 10/50 [06:38<26:21, 39.53s/it] 16%|█▌        | 8/50 [04:39<24:06, 34.43s/it] 28%|██▊       | 14/50 [09:21<23:27, 39.11s/it] 30%|███       | 15/50 [09:26<21:26, 36.75s/it] 32%|███▏      | 16/50 [09:22<19:39, 34.70s/it] 28%|██▊       | 14/50 [09:23<24:05, 40.14s/it] 28%|██▊       | 14/50 [08:25<21:17, 35.49s/it] 26%|██▌       | 13/50 [08:35<24:11, 39.23s/it] 16%|█▌        | 8/50 [04:51<25:27, 36.37s/it] 32%|███▏      | 16/50 [09:33<20:09, 35.56s/it] 28%|██▊       | 14/50 [10:27<26:46, 44.63s/it] 18%|█▊        | 9/50 [05:13<23:30, 34.41s/it] 34%|███▍      | 17/50 [09:57<19:06, 34.73s/it] 22%|██▏       | 11/50 [07:16<25:31, 39.26s/it] 32%|███▏      | 16/50 [10:03<20:46, 36.67s/it] 30%|███       | 15/50 [09:00<20:43, 35.52s/it] 30%|███       | 15/50 [10:01<23:03, 39.54s/it] 18%|█▊        | 9/50 [07:15<32:17, 47.26s/it] 30%|███       | 15/50 [10:03<23:25, 40.14s/it] 18%|█▊        | 9/50 [05:27<24:46, 36.25s/it] 34%|███▍      | 17/50 [10:08<19:34, 35.58s/it] 28%|██▊       | 14/50 [09:15<23:33, 39.27s/it] 30%|███       | 15/50 [11:10<25:53, 44.40s/it] 20%|██        | 10/50 [05:47<22:54, 34.36s/it] 36%|███▌      | 18/50 [10:32<18:30, 34.70s/it] 34%|███▍      | 17/50 [10:39<20:06, 36.57s/it] 32%|███▏      | 16/50 [09:36<20:14, 35.71s/it] 24%|██▍       | 12/50 [07:56<24:58, 39.43s/it] 32%|███▏      | 16/50 [10:41<22:26, 39.60s/it] 32%|███▏      | 16/50 [10:41<22:25, 39.57s/it] 20%|██        | 10/50 [06:02<23:57, 35.94s/it] 36%|███▌      | 18/50 [10:43<18:50, 35.32s/it] 30%|███       | 15/50 [09:54<22:56, 39.34s/it] 20%|██        | 10/50 [08:03<31:38, 47.46s/it] 32%|███▏      | 16/50 [11:53<24:52, 43.90s/it] 22%|██▏       | 11/50 [06:22<22:18, 34.33s/it] 38%|███▊      | 19/50 [11:06<17:56, 34.71s/it] 34%|███▍      | 17/50 [10:11<19:31, 35.51s/it] 36%|███▌      | 18/50 [11:18<19:51, 37.23s/it] 26%|██▌       | 13/50 [08:36<24:26, 39.63s/it] 38%|███▊      | 19/50 [11:19<18:22, 35.55s/it] 22%|██▏       | 11/50 [06:39<23:32, 36.21s/it] 34%|███▍      | 17/50 [11:19<21:31, 39.14s/it] 34%|███▍      | 17/50 [11:21<21:56, 39.89s/it] 32%|███▏      | 16/50 [10:34<22:17, 39.33s/it] 24%|██▍       | 12/50 [06:56<21:44, 34.32s/it] 22%|██▏       | 11/50 [08:50<30:48, 47.40s/it] 40%|████      | 20/50 [11:41<17:22, 34.76s/it] 36%|███▌      | 18/50 [10:46<18:51, 35.36s/it] 34%|███▍      | 17/50 [12:38<24:16, 44.14s/it] 38%|███▊      | 19/50 [11:56<19:19, 37.39s/it] 24%|██▍       | 12/50 [07:14<22:42, 35.85s/it] 40%|████      | 20/50 [11:55<17:45, 35.53s/it] 28%|██▊       | 14/50 [09:16<23:48, 39.68s/it] 36%|███▌      | 18/50 [11:59<20:51, 39.11s/it] 36%|███▌      | 18/50 [12:01<21:12, 39.78s/it] 34%|███▍      | 17/50 [11:12<21:28, 39.03s/it] 26%|██▌       | 13/50 [07:30<21:09, 34.30s/it] 42%|████▏     | 21/50 [12:16<16:47, 34.74s/it] 38%|███▊      | 19/50 [11:21<18:10, 35.17s/it] 24%|██▍       | 12/50 [09:37<29:52, 47.18s/it] 40%|████      | 20/50 [12:33<18:38, 37.30s/it] 42%|████▏     | 21/50 [12:30<17:08, 35.47s/it] 26%|██▌       | 13/50 [07:50<22:02, 35.75s/it] 36%|███▌      | 18/50 [13:24<23:48, 44.63s/it] 30%|███       | 15/50 [09:55<23:05, 39.60s/it] 38%|███▊      | 19/50 [12:37<20:09, 39.01s/it] 38%|███▊      | 19/50 [12:41<20:39, 39.97s/it] 28%|██▊       | 14/50 [08:05<20:34, 34.29s/it] 36%|███▌      | 18/50 [11:51<20:53, 39.16s/it] 44%|████▍     | 22/50 [12:51<16:12, 34.72s/it] 40%|████      | 20/50 [11:56<17:32, 35.07s/it] 42%|████▏     | 21/50 [13:09<17:50, 36.93s/it] 44%|████▍     | 22/50 [13:06<16:37, 35.63s/it] 28%|██▊       | 14/50 [08:27<21:43, 36.21s/it] 26%|██▌       | 13/50 [10:23<28:58, 46.98s/it] 38%|███▊      | 19/50 [14:08<22:58, 44.46s/it] 32%|███▏      | 16/50 [10:35<22:30, 39.71s/it] 40%|████      | 20/50 [13:17<19:37, 39.25s/it] 30%|███       | 15/50 [08:39<20:03, 34.38s/it] 40%|████      | 20/50 [13:21<19:56, 39.88s/it] 38%|███▊      | 19/50 [12:31<20:16, 39.23s/it] 46%|████▌     | 23/50 [13:26<15:39, 34.80s/it] 42%|████▏     | 21/50 [12:31<16:57, 35.09s/it] 46%|████▌     | 23/50 [13:41<15:55, 35.39s/it] 44%|████▍     | 22/50 [13:47<17:21, 37.20s/it] 30%|███       | 15/50 [09:03<21:06, 36.17s/it] 32%|███▏      | 16/50 [09:13<19:28, 34.37s/it] 34%|███▍      | 17/50 [11:15<21:46, 39.58s/it] 42%|████▏     | 21/50 [13:57<19:01, 39.35s/it] 28%|██▊       | 14/50 [11:10<28:06, 46.84s/it] 40%|████      | 20/50 [14:51<22:05, 44.19s/it] 48%|████▊     | 24/50 [14:00<15:02, 34.71s/it] 42%|████▏     | 21/50 [14:01<19:19, 39.97s/it] 40%|████      | 20/50 [13:10<19:40, 39.35s/it] 44%|████▍     | 22/50 [13:06<16:23, 35.13s/it] 48%|████▊     | 24/50 [14:16<15:21, 35.44s/it] 46%|████▌     | 23/50 [14:23<16:38, 36.99s/it] 32%|███▏      | 16/50 [09:40<20:41, 36.52s/it] 34%|███▍      | 17/50 [09:48<18:59, 34.54s/it] 50%|█████     | 25/50 [14:34<14:24, 34.57s/it] 36%|███▌      | 18/50 [11:54<21:05, 39.54s/it] 44%|████▍     | 22/50 [14:36<18:23, 39.42s/it] 46%|████▌     | 23/50 [13:41<15:46, 35.04s/it] 44%|████▍     | 22/50 [14:41<18:40, 40.02s/it] 30%|███       | 15/50 [11:56<27:13, 46.68s/it] 42%|████▏     | 21/50 [15:36<21:23, 44.25s/it] 42%|████▏     | 21/50 [13:50<18:59, 39.30s/it]
