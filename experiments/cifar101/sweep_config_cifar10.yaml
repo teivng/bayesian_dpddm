@@ -1,5 +1,5 @@
 project: bayesian_dpddm
-program: experiments/exp_cifar10.py
+program: experiments/cifar101/exp_cifar10.py
 method: bayes  
 metric:
   name: fpr_train
