@@ -41,7 +41,7 @@ def main():
     parser.add_argument('--pool_dims', type=int, default=2)
     parser.add_argument('--hidden_dim', type=int, default=256)
     parser.add_argument('--dropout', type=float, default=0.0) # per Resnet paper
-    parser.add_argument('--reg_weight', type=float, default=1/len(cifar10train)*10)
+    parser.add_argument('--reg_weight_factor', type=float, default=1)
     parser.add_argument('--param', type=str, default='diagonal')
     parser.add_argument('--prior_scale', type=float, default=1.0)
     parser.add_argument('--wishart_scale', type=float, default=1.0)
@@ -78,13 +78,13 @@ def main():
             'kernel_size': args.kernel_size,
             'mid_layers': args.mid_layers,
             'hidden_dim': args.hidden_dim,
-            'reg_weight': args.reg_weight,
+            'reg_weight_factor': args.reg_weight_factor,
             'temp': args.temp
         }
     )
     
     ''' Build model and monitor '''
-    base_model = DPDDMConvModel(model_config)
+    base_model = DPDDMConvModel(model_config,train_size=len(cifar10train))
     monitor = DPDDMBayesianMonitor(
         model=base_model,
         trainset=cifar10train,

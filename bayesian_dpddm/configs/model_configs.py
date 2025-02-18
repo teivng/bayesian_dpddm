@@ -13,7 +13,7 @@ class ConvModelConfig:
     pool_dims: int
     hidden_dim: int
     dropout: float
-    reg_weight: float
+    reg_weight_factor: float
     param: str
     prior_scale: float
     wishart_scale: float
