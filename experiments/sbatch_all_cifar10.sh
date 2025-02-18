@@ -31,7 +31,7 @@ done
 echo "Submitted s_m4.slrm"
 
 #m5 queue
-for i in {0..64}; do
+for i in {0..63}; do
     sbatch "experiments/s_m5.slrm"
 done
 echo "Submitted s_m5.slrm"
