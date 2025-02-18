@@ -2,11 +2,11 @@ from abc import ABC, abstractmethod
 import torch
 from torch import nn as nn 
 
-class DPDDM_ABSTRACTMODEL(nn.Module, ABC):
+class DPDDMAbstractModel(nn.Module, ABC):
     """Defines the interface for a DPDDM model"""
     
     def __init__(self):
-        super(DPDDM_ABSTRACTMODEL, self).__init__()
+        super(DPDDMAbstractModel, self).__init__()
         
     @abstractmethod
     def get_features(self, x):

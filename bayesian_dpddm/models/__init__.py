@@ -1,1 +1,1 @@
-from .cnn_model import CNN_DPDDM_Model
+from .cnn_model import DPDDMConvModel

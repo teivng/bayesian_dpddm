@@ -2,31 +2,32 @@ from tqdm import tqdm
 
 import numpy as np
 import torch
-from ..models.base import DPDDM_ABSTRACTMODEL
-from torch.utils.data import DataLoader, Dataset
+from ..models.base import DPDDMAbstractModel
+from ..configs import TrainConfig
 
+from torch.utils.data import DataLoader, Dataset
 from .utils import temperature_scaling, sample_from_dataset
 
-class DPDDM_Bayesian_Monitor:
+class DPDDMBayesianMonitor:
     """Defines the Bayesian DPDDM Monitor (Algorithms 3 and 4)
     
     Attributes:
-        model (DPDDM_ABSTRACTMODEL): the model class, i.e. hypothesis class for the base classifier
+        model (DPDDMAbstractModel): the model class, i.e. hypothesis class for the base classifier
         trainset (Dataset): torch training dataset
         valset (Dataset): torch validation dataset
         optimizer (torch.optim.Optimizer): optimizer for the base classifier
         trainloader (DataLoader): train set loader
         valloader (DataLoader): validation set loader
         output_metrics (dict): dictionary containing the training metrics for the base classifier
-        train_cfg (train_cfg): data object for the training configuration
+        train_cfg (TrainConfig): data object for the training configuration
         device (torch.device): device, cuda or cpu
         Phi (list): distribution of disagreement rates, to be populated
     """
 
-    def __init__(self, model:DPDDM_ABSTRACTMODEL, 
+    def __init__(self, model:DPDDMAbstractModel, 
                  trainset:Dataset, 
                  valset:Dataset, 
-                 train_cfg, 
+                 train_cfg:TrainConfig, 
                  device=torch.device('cuda' if torch.cuda.is_available() else 'cpu')
                  ):
 
@@ -34,13 +35,13 @@ class DPDDM_Bayesian_Monitor:
         self.trainset = trainset
         self.valset = valset
         
-        self.optimizer = train_cfg.OPTIMIZER(
+        self.optimizer = train_cfg.optimizer(
             self.model.parameters(),
-            lr=train_cfg.LR,
-            weight_decay=train_cfg.WD,
+            lr=train_cfg.lr,
+            weight_decay=train_cfg.wd,
         )
-        self.trainloader = DataLoader(self.trainset, batch_size=train_cfg.BATCH_SIZE, shuffle=True)
-        self.valloader = DataLoader(self.valset, batch_size=train_cfg.BATCH_SIZE, shuffle=True)
+        self.trainloader = DataLoader(self.trainset, batch_size=train_cfg.batch_size, shuffle=True)
+        self.valloader = DataLoader(self.valset, batch_size=train_cfg.batch_size, shuffle=True)
 
         self.output_metrics = {
             'train_loss': [],
@@ -83,7 +84,7 @@ class DPDDM_Bayesian_Monitor:
             dict: dictionary containing training metrics
         """
         f = tqdm if tqdm_enabled else lambda x: x
-        for epoch in f(range(self.train_cfg.NUM_EPOCHS)):
+        for epoch in f(range(self.train_cfg.num_epochs)):
             self.model.train()
             running_loss = []
             running_acc = []
@@ -100,7 +101,7 @@ class DPDDM_Bayesian_Monitor:
                 self.optimizer.step()
             self.output_metrics['train_loss'].append(np.mean(running_loss))
             self.output_metrics['train_acc'].append(np.mean(running_acc))
-            if epoch % self.train_cfg.VAL_FREQ == 0:
+            if epoch % self.train_cfg.val_freq == 0:
                 running_val_loss = []
                 running_val_acc = []
                 with torch.no_grad():
@@ -211,9 +212,9 @@ class DPDDM_Bayesian_Monitor:
             X, y_pseudo = X.to(self.device), y_pseudo.to(self.device)
             max_dis_rate = self.compute_max_dis_rate(X, y_pseudo, n_post_samples=n_post_samples, temperature=temperature)
         return max_dis_rate, max_dis_rate >= np.quantile(self.Phi, alpha) if self.Phi != [] else 0 
+
     
-    
-    def repeat_tests(self, dataset:Dataset, n_post_samples=5000, data_sample_size=1000, n_repeats=1):
+    def repeat_tests(self, n_repeats=1, *args, **kwargs):
         assert self.Phi != []
         """After training Phi, monitors D-PDD using the DPDDM test (Algorithm 4) on dataset
     
@@ -223,12 +224,13 @@ class DPDDM_Bayesian_Monitor:
             data_sample_size (int, optional): size of bootstraped dataset (few-shot evaluations). Defaults to 1000.
             n_repeats (int, optional): number of times to repeat independent realizations of DPDDM test (TPR/FPR calculations). Defaults to 1.
         """
+
         self.model.eval()
         with torch.no_grad():
             tprs = []
             max_dis_rates = []
             for i in tqdm(range(n_repeats)):
-                max_dis_rate, result = self.dpddm_test(dataset, data_sample_size=data_sample_size, temperature=self.temperature)
+                max_dis_rate, result = self.dpddm_test(*args, **kwargs)
                 tprs.append(result)
                 max_dis_rates.append(max_dis_rate)
             return np.mean(tprs), max_dis_rates
