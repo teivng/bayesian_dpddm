@@ -1,7 +1,7 @@
 #!/bin/bash
 #SBATCH --job-name=bdpddm_sweep
 #SBATCH -c 16
-#SBATCH --qos=m
+#SBATCH --qos=m2
 #SBATCH --partition=t4v1,t4v2,rtx6000,a40
 #SBATCH --mem=32G
 #SBATCH --gres=gpu:1
