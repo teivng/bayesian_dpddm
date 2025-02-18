@@ -117,14 +117,23 @@ def main():
                                                temperature=args.temp,
                                                )
     
+    ''' wandb log Phi statistics '''
+    wandb.log({
+        'Phi-mean': np.mean(monitor.Phi),
+        'Phi-std': np.std(monitor.Phi),
+        'Phi-med': np.median(monitor.Phi)
+         
+    })
+    
     ''' Test TPR/FPR on all datasets '''
     stats = {}
+    dis_rates = {}
     for k,dataset in {
         'cifar10-train': cifar10train_with_test_transforms,
         'cifar10-test': cifar10test,
         'cifar10.1': cifar101
     }.items():
-        rate, _ = monitor.repeat_tests(n_repeats=100,
+        rate, max_dis_rates = monitor.repeat_tests(n_repeats=100,
                                       dataset=dataset, 
                                       n_post_samples=args.n_post_samples,
                                       data_sample_size=args.data_sample_size,
@@ -132,6 +141,7 @@ def main():
                                       )
         print(f"{k}: {rate}")
         stats[k] = rate
+        dis_rates[k] = (np.mean(max_dis_rates), np.std(max_dis_rates))
 
     ''' wandb log statistics '''
     wandb.log({
@@ -139,7 +149,12 @@ def main():
         'fpr_test': stats['cifar10-test'],
         'tpr': stats ['cifar10.1']
     })
-
+    wandb.log({
+        'dis_rates_train': dis_rates['cifar10-train'],
+        'dis_rates_test': dis_rates['cifar10-test'],
+        'dis_rates_ood': dis_rates['cifar10.1']
+    })
+    
     return 0
 
 
