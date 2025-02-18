@@ -13,7 +13,6 @@
 #SBATCH --signal=B:USR1@120
 
 source ~/.bashrc
-conda activate bayes
+conda activate dpddm
 which python
 wandb agent opent03-team/bayesian_dpddm/obxprov4
- 
