@@ -1,0 +1,166 @@
+wandb: Starting wandb agent 🕵️
+2025-02-18 02:49:25,591 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 02:49:25,849 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 02:49:25,849 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 64
+	kernel_size: 7
+	mid_channels: 32
+	mid_layers: 2
+	reg_weight: 0.005
+	temp: 100
+2025-02-18 02:49:25,858 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=64 --kernel_size=7 --mid_channels=32 --mid_layers=2 --reg_weight=0.005 --temp=100
+wandb: Starting wandb agent 🕵️
+2025-02-18 02:49:30,881 - wandb.wandb_agent - INFO - Running runs: ['ohiqnirn']
+2025-02-18 02:49:31,247 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 02:49:31,549 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 02:49:31,549 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 32
+	kernel_size: 7
+	mid_channels: 32
+	mid_layers: 4
+	reg_weight: 0.05
+	temp: 50
+2025-02-18 02:49:31,558 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=32 --kernel_size=7 --mid_channels=32 --mid_layers=4 --reg_weight=0.05 --temp=50
+2025-02-18 02:49:36,593 - wandb.wandb_agent - INFO - Running runs: ['nlg82pwx']
+wandb: Currently logged in as: opent03 (opent03-team) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: WARNING Ignoring project 'bayesian_dpddm' when running a sweep.
+wandb: Currently logged in as: opent03 (opent03-team) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: WARNING Ignoring project 'bayesian_dpddm' when running a sweep.
+slurmstepd: error: *** JOB 14931508 ON gpu078 CANCELLED AT 2025-02-18T02:49:51 ***
+slurmstepd: error: *** JOB 14931507 ON gpu104 CANCELLED AT 2025-02-18T02:49:51 ***
+wandb: Starting wandb agent 🕵️
+2025-02-18 02:55:46,094 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 02:55:46,559 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 02:55:46,559 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 32
+	kernel_size: 3
+	mid_channels: 64
+	mid_layers: 2
+	reg_weight: 0.05
+	temp: 200
+2025-02-18 02:55:46,568 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=32 --kernel_size=3 --mid_channels=64 --mid_layers=2 --reg_weight=0.05 --temp=200
+2025-02-18 02:55:51,590 - wandb.wandb_agent - INFO - Running runs: ['xvej96em']
+wandb: Currently logged in as: opent03 (opent03-team) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: WARNING Ignoring project 'bayesian_dpddm' when running a sweep.
+wandb: Tracking run with wandb version 0.19.6
+wandb: Run data is saved locally in /fs01/home/opent03/bayesian_dpddm/wandb/run-20250218_025604-xvej96em
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run hardy-sweep-12
+wandb: ⭐️ View project at https://wandb.ai/opent03-team/bayesian_dpddm-experiments
+wandb: 🧹 View sweep at https://wandb.ai/opent03-team/bayesian_dpddm-experiments/sweeps/5vjligll
+wandb: 🚀 View run at https://wandb.ai/opent03-team/bayesian_dpddm-experiments/runs/xvej96em
+  0%|          | 0/50 [00:00<?, ?it/s]wandb: Starting wandb agent 🕵️
+wandb: Starting wandb agent 🕵️
+2025-02-18 02:57:02,910 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 02:57:02,918 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 02:57:03,266 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 02:57:03,267 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 128
+	kernel_size: 3
+	mid_channels: 16
+	mid_layers: 2
+	reg_weight: 0.05
+	temp: 10
+2025-02-18 02:57:03,298 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=128 --kernel_size=3 --mid_channels=16 --mid_layers=2 --reg_weight=0.05 --temp=10
+2025-02-18 02:57:03,485 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 02:57:03,485 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 32
+	kernel_size: 7
+	mid_channels: 64
+	mid_layers: 1
+	reg_weight: 0.05
+	temp: 1
+2025-02-18 02:57:03,489 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=32 --kernel_size=7 --mid_channels=64 --mid_layers=1 --reg_weight=0.05 --temp=1
+2025-02-18 02:57:08,334 - wandb.wandb_agent - INFO - Running runs: ['n57gy1bi']
+2025-02-18 02:57:08,509 - wandb.wandb_agent - INFO - Running runs: ['pmducqwi']
+  2%|▏         | 1/50 [00:46<37:50, 46.35s/it]wandb: Currently logged in as: opent03 (opent03-team) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: WARNING Ignoring project 'bayesian_dpddm' when running a sweep.
+wandb: Currently logged in as: opent03 (opent03-team) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: WARNING Ignoring project 'bayesian_dpddm' when running a sweep.
+wandb: Tracking run with wandb version 0.19.6
+wandb: Run data is saved locally in /fs01/home/opent03/bayesian_dpddm/wandb/run-20250218_025719-pmducqwi
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run pretty-sweep-14
+wandb: ⭐️ View project at https://wandb.ai/opent03-team/bayesian_dpddm-experiments
+wandb: 🧹 View sweep at https://wandb.ai/opent03-team/bayesian_dpddm-experiments/sweeps/5vjligll
+wandb: 🚀 View run at https://wandb.ai/opent03-team/bayesian_dpddm-experiments/runs/pmducqwi
+wandb: Tracking run with wandb version 0.19.6
+wandb: Run data is saved locally in /fs01/home/opent03/bayesian_dpddm/wandb/run-20250218_025719-n57gy1bi
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run resilient-sweep-13
+wandb: ⭐️ View project at https://wandb.ai/opent03-team/bayesian_dpddm-experiments
+wandb: 🧹 View sweep at https://wandb.ai/opent03-team/bayesian_dpddm-experiments/sweeps/5vjligll
+wandb: 🚀 View run at https://wandb.ai/opent03-team/bayesian_dpddm-experiments/runs/n57gy1bi
+  0%|          | 0/50 [00:00<?, ?it/s]  0%|          | 0/50 [00:00<?, ?it/s]wandb: Starting wandb agent 🕵️
+wandb: Starting wandb agent 🕵️
+  4%|▍         | 2/50 [01:27<34:28, 43.09s/it]2025-02-18 02:57:54,303 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 02:57:54,586 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 02:57:54,828 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 02:57:54,838 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 128
+	kernel_size: 7
+	mid_channels: 32
+	mid_layers: 1
+	reg_weight: 0.0005
+	temp: 20
+2025-02-18 02:57:54,864 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=128 --kernel_size=7 --mid_channels=32 --mid_layers=1 --reg_weight=0.0005 --temp=20
+2025-02-18 02:57:55,108 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 02:57:55,117 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 32
+	kernel_size: 5
+	mid_channels: 64
+	mid_layers: 1
+	reg_weight: 0.005
+	temp: 200
+2025-02-18 02:57:55,145 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=32 --kernel_size=5 --mid_channels=64 --mid_layers=1 --reg_weight=0.005 --temp=200
+2025-02-18 02:57:59,886 - wandb.wandb_agent - INFO - Running runs: ['5b1pgobc']
+2025-02-18 02:58:00,178 - wandb.wandb_agent - INFO - Running runs: ['1rkkfaeb']
+wandb: Currently logged in as: opent03 (opent03-team) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: WARNING Ignoring project 'bayesian_dpddm' when running a sweep.
+wandb: Currently logged in as: opent03 (opent03-team) to https://api.wandb.ai. Use `wandb login --relogin` to force relogin
+wandb: WARNING Ignoring project 'bayesian_dpddm' when running a sweep.
+  2%|▏         | 1/50 [00:38<31:33, 38.64s/it]  2%|▏         | 1/50 [00:40<32:59, 40.41s/it]wandb: Tracking run with wandb version 0.19.6
+wandb: Run data is saved locally in /fs01/home/opent03/bayesian_dpddm/wandb/run-20250218_025809-5b1pgobc
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run tough-sweep-15
+wandb: ⭐️ View project at https://wandb.ai/opent03-team/bayesian_dpddm-experiments
+wandb: 🧹 View sweep at https://wandb.ai/opent03-team/bayesian_dpddm-experiments/sweeps/5vjligll
+wandb: 🚀 View run at https://wandb.ai/opent03-team/bayesian_dpddm-experiments/runs/5b1pgobc
+  0%|          | 0/50 [00:00<?, ?it/s]wandb: Tracking run with wandb version 0.19.6
+wandb: Run data is saved locally in /fs01/home/opent03/bayesian_dpddm/wandb/run-20250218_025813-1rkkfaeb
+wandb: Run `wandb offline` to turn off syncing.
+wandb: Syncing run deft-sweep-16
+wandb: ⭐️ View project at https://wandb.ai/opent03-team/bayesian_dpddm-experiments
+wandb: 🧹 View sweep at https://wandb.ai/opent03-team/bayesian_dpddm-experiments/sweeps/5vjligll
+wandb: 🚀 View run at https://wandb.ai/opent03-team/bayesian_dpddm-experiments/runs/1rkkfaeb
+wandb: Starting wandb agent 🕵️
+wandb: Starting wandb agent 🕵️
+  0%|          | 0/50 [00:00<?, ?it/s]  6%|▌         | 3/50 [02:08<33:12, 42.39s/it]2025-02-18 02:58:32,924 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 02:58:32,934 - wandb.wandb_agent - INFO - Running runs: []
+2025-02-18 02:58:33,376 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 02:58:33,376 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 32
+	kernel_size: 7
+	mid_channels: 64
+	mid_layers: 3
+	reg_weight: 0.005
+	temp: 50
+2025-02-18 02:58:33,388 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=32 --kernel_size=7 --mid_channels=64 --mid_layers=3 --reg_weight=0.005 --temp=50
+2025-02-18 02:58:33,662 - wandb.wandb_agent - INFO - Agent received command: run
+2025-02-18 02:58:33,663 - wandb.wandb_agent - INFO - Agent starting run with config:
+	hidden_dim: 32
+	kernel_size: 5
+	mid_channels: 64
+	mid_layers: 1
+	reg_weight: 0.0005
+	temp: 50
+2025-02-18 02:58:33,667 - wandb.wandb_agent - INFO - About to run command: /usr/bin/env python experiments/exp_cifar10.py --hidden_dim=32 --kernel_size=5 --mid_channels=64 --mid_layers=1 --reg_weight=0.0005 --temp=50
+2025-02-18 02:58:38,425 - wandb.wandb_agent - INFO - Running runs: ['3xxczrri']
+2025-02-18 02:58:38,683 - wandb.wandb_agent - INFO - Running runs: ['5hzbam4g']
+slurmstepd: error: *** JOB 14931661 ON gpu129 CANCELLED AT 2025-02-18T02:58:41 ***
+slurmstepd: error: *** JOB 14931664 ON gpu152 CANCELLED AT 2025-02-18T02:58:41 ***
+slurmstepd: error: *** JOB 14931665 ON gpu152 CANCELLED AT 2025-02-18T02:58:41 ***
+slurmstepd: error: *** JOB 14931662 ON gpu160 CANCELLED AT 2025-02-18T02:58:41 ***
+slurmstepd: error: *** JOB 14931660 ON gpu129 CANCELLED AT 2025-02-18T02:58:41 ***
+slurmstepd: error: *** JOB 14931663 ON gpu150 CANCELLED AT 2025-02-18T02:58:41 ***
+slurmstepd: error: *** JOB 14931659 ON gpu089 CANCELLED AT 2025-02-18T02:58:41 ***
