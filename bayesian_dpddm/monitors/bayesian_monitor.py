@@ -1,4 +1,5 @@
 from tqdm import tqdm
+import wandb 
 
 import numpy as np
 import torch
@@ -122,6 +123,15 @@ class DPDDMBayesianMonitor:
             if epoch % 10 == 0:
                 print('Epoch: {:2d}, train loss: {:4.4f}'.format(epoch, np.mean(running_loss)))
                 print('Epoch: {:2d}, valid loss: {:4.4f}'.format(epoch, np.mean(np.mean(running_val_loss))))
+            
+            # wandb logging
+            if wandb.run is not None:
+                wandb.log({
+                    'train_loss': self.output_metrics['train_loss'][-1],
+                    'train_acc': self.output_metrics['train_acc'][-1],
+                    'val_loss': self.output_metrics['val_loss'][-1],
+                    'val_acc': self.output_metrics['val_acc'][-1],
+                })
 
         return self.output_metrics
     

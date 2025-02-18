@@ -1,4 +1,5 @@
 import os
+import wandb
 
 import argparse
 from bayesian_dpddm import DPDDMConvModel, DPDDMBayesianMonitor
@@ -19,6 +20,10 @@ torch.random.manual_seed(RANDOM_SEED)
 
     
 def main():
+    # =========================================================
+    # ==================Initialization=========================
+    # =========================================================
+    
     ''' Get datasets '''
     cifar10train, cifar10test, cifar101 = get_cifar10_datasets()
     
@@ -56,8 +61,23 @@ def main():
 
     args = parser.parse_args()
     
-    ''' Get configs '''
+    ''' Get config objects '''
     model_config, train_config = get_configs(args)
+    
+    ''' wandb initialization '''
+    wandb.init(
+        project="bayesian_dpddm",
+
+        # track hyperparameters and run metadata
+        config={
+            'mid_channels': args.mid_channels,
+            'kernel_size': args.kernel_size,
+            'mid_layers': args.mid_layers,
+            'hidden_dim': args.hidden_dim,
+            'reg_weight': args.reg_weight,
+            'temp': args.temp
+        }
+    )
     
     ''' Build model and monitor '''
     base_model = DPDDMConvModel(model_config)
@@ -69,6 +89,10 @@ def main():
         device=device,
     )
     
+    # =========================================================
+    # ===================Base Training=========================
+    # =========================================================
+    
     ''' Load base model if pretrained, else train '''
     if args.from_pretrained:
         base_model.load_state_dict(torch.load(os.path.join('saved_weights', f'{args.save_name}.pth')))
@@ -76,6 +100,10 @@ def main():
         monitor.train_model(tqdm_enabled=True)
         os.makedirs('saved_weights', exist_ok=True)
         torch.save(monitor.model.state_dict(), os.path.join('saved_weights', f'{args.save_name}.pth'))
+    
+    # =========================================================
+    # =============D-PDDM Training and Testing=================
+    # =========================================================
     
     ''' Pretrain the disagreement distribution Phi '''
     monitor.pretrain_disagreement_distribution(dataset=cifar10test,
@@ -85,18 +113,26 @@ def main():
                                                )
     
     ''' Test TPR/FPR on all datasets '''
+    stats = {}
     for k,dataset in {
         'cifar10-train': cifar10train,
         'cifar10-test': cifar10test,
         'cifar10.1': cifar101
     }.items():
-        tpr, _ = monitor.repeat_tests(n_repeats=100,
+        rate, _ = monitor.repeat_tests(n_repeats=100,
                                       dataset=dataset, 
                                       n_post_samples=args.n_post_samples,
                                       data_sample_size=args.data_sample_size,
                                       temperature=args.temp)
-        print(f"{k}: {tpr}")
+        print(f"{k}: {rate}")
+        stats[k] = rate
 
+    ''' wandb log statistics '''
+    wandb.log({
+        'fpr_train': stats['cifar10-train'],
+        'fpr_test': stats['cifar10-test'],
+        'tpr': stats ['cifar10.1']
+    })
 
     return 0
 
