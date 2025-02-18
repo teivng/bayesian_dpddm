@@ -1,0 +1,5 @@
+__author__ = "Viet Nguyen"
+__email__ = "viet@cs.toronto.edu"
+__license__ = "MIT"
+__url__ = "https://github.com/opent03/bayesian_dpddm"
+__description__ = "Bayesian D-PDDM for post-deployment deterioration monitoring of machine learning models."
