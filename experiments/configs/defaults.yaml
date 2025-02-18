@@ -1,0 +1,5 @@
+defaults:
+  - train: defaults
+  - dataset: defaults
+  - dpddm: defaults
+  - model: defaults

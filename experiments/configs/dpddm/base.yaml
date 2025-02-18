@@ -1,0 +1,4 @@
+Phi_size: 500
+n_post_samples: 5000
+data_sample_size: 1000
+temp: 50

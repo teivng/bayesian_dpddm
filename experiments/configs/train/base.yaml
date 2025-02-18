@@ -1,0 +1,4 @@
+num_epochs: 50
+batch_size: 64
+lr: 0.001
+wd: 0.0001
