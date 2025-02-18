@@ -29,7 +29,7 @@ def main():
     # =========================================================
     
     ''' Get datasets '''
-    cifar10train, cifar10test, cifar101 = get_cifar10_datasets()
+    cifar10train, cifar10test, cifar10train_with_test_transforms, cifar101 = get_cifar10_datasets()
     
     ''' Parse model configuration '''
     parser = argparse.ArgumentParser()
@@ -112,14 +112,15 @@ def main():
     ''' Pretrain the disagreement distribution Phi '''
     monitor.pretrain_disagreement_distribution(dataset=cifar10test,
                                                n_post_samples=args.n_post_samples,
-                                               data_sample_size=args.data_sample_size, 
+                                               data_sample_size=args.data_sample_size,
+                                               Phi_size=args.Phi_size, 
                                                temperature=args.temp,
                                                )
     
     ''' Test TPR/FPR on all datasets '''
     stats = {}
     for k,dataset in {
-        'cifar10-train': cifar10train,
+        'cifar10-train': cifar10train_with_test_transforms,
         'cifar10-test': cifar10test,
         'cifar10.1': cifar101
     }.items():
@@ -127,7 +128,8 @@ def main():
                                       dataset=dataset, 
                                       n_post_samples=args.n_post_samples,
                                       data_sample_size=args.data_sample_size,
-                                      temperature=args.temp)
+                                      temperature=args.temp
+                                      )
         print(f"{k}: {rate}")
         stats[k] = rate
 
