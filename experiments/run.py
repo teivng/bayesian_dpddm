@@ -49,6 +49,9 @@ def main(args:DictConfig):
     ''' Get config objects '''
     model_config, train_config = get_configs(args)
     
+    
+    exit()
+    
     ''' Build model and monitor '''
     base_model = DPDDMConvModel(model_config,train_size=len(dataset['train']))
     monitor = DPDDMBayesianMonitor(
