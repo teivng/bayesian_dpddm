@@ -1,5 +1,7 @@
 import os
 import wandb
+import hydra
+from omegaconf import DictConfig
 
 import sys
 parentdir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
@@ -21,51 +23,26 @@ RANDOM_SEED = 9927
 np.random.seed(RANDOM_SEED)
 torch.random.manual_seed(RANDOM_SEED)
 
-    
-def main():
+@hydra.main(config_path='configs/', config_name='defaults')
+def main(args:DictConfig):
     # =========================================================
     # ==================Initialization=========================
     # =========================================================
     
+    run = wandb.init(project=args.wandb_args.project,
+                     config={
+                         'mid_channels': args.model.mid_channels,
+                         'kernel_size': args.model.kernel_size,
+                         'mid_layers': args.model.mid_layers,
+                         'hidden_dim': args.model.hidden_dim,
+                         'reg_weight_factor': args.model.reg_weight_factor,
+                         'temp': args.dpddm.temp
+                         })
+    
     ''' Get datasets '''
     cifar10train, cifar10test, cifar10train_with_test_transforms, cifar101 = get_cifar10_datasets()
     
-    ''' Parse model configuration '''
-    parser = argparse.ArgumentParser()
-    parser.add_argument('--in_channels', type=int, default=3)
-    parser.add_argument('--mid_channels', type=int, default=64)
-    parser.add_argument('--out_features', type=int, default=10)
-    parser.add_argument('--kernel_size', type=int, default=3)
-    parser.add_argument('--mid_layers', type=int, default=3)
-    parser.add_argument('--pool_dims', type=int, default=2)
-    parser.add_argument('--hidden_dim', type=int, default=256)
-    parser.add_argument('--dropout', type=float, default=0.0) # per Resnet paper
-    parser.add_argument('--reg_weight_factor', type=float, default=1)
-    parser.add_argument('--param', type=str, default='diagonal')
-    parser.add_argument('--prior_scale', type=float, default=1.0)
-    parser.add_argument('--wishart_scale', type=float, default=1.0)
     
-    ''' Parse training configuration '''
-    parser.add_argument('--num_epochs', type=int, default=50)
-    parser.add_argument('--batch_size', type=int, default=64)
-    parser.add_argument('--lr', type=float, default=0.001)
-    parser.add_argument('--wd', type=float, default=0.0001)
-
-
-    ''' Parse DPDDM configuration '''
-    parser.add_argument('--Phi_size', type=int, default=500)
-    parser.add_argument('--n_post_samples', type=int, default=5000)
-    parser.add_argument('--temp', type=float, default=1)
-    parser.add_argument('--data_sample_size', type=int, default=1000)
-    
-    ''' Misc. configuration '''
-    parser.add_argument('--from_pretrained', action=argparse.BooleanOptionalAction)
-    parser.add_argument('--save_name', type=str, default='cnn_model')
-
-    args = parser.parse_args()
-    
-    ''' Get config objects '''
-    model_config, train_config = get_configs(args)
     
     ''' wandb initialization '''
     wandb.init(
@@ -88,7 +65,7 @@ def main():
         model=base_model,
         trainset=cifar10train,
         valset=cifar10test,
-        train_cfg=train_config,
+        train_args=train_config,
         device=device,
     )
     

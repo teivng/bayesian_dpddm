@@ -7,6 +7,9 @@ import argparse
 import inspect
 from bayesian_dpddm.configs import ConvModelConfig, TrainConfig
 
+import os
+
+
 def filter_args(cls, args):
     """Given parsed arguments, filter arguments required by the dataclass
 
@@ -80,29 +83,30 @@ test_transforms = v2.Compose([
 ])
 
 
-def get_cifar10_datasets():
+def get_cifar10_datasets(download=True):
     """Returns processed CIFAR10 and CIFAR10.1 Dataset objects. 
 
     Returns:
         tuple(Dataset, Dataset, Dataset, CIFAR101Dataset): 4-tuple containing:
         CIFAR10 train, test, train with test transforms, and CIFAR10.1. 
     """
-    cifar10train = torchvision.datasets.CIFAR10(root='data/', 
+    print(os.getcwd())
+    cifar10train = torchvision.datasets.CIFAR10(root='data/cifar10_data/', 
                                                 transform=train_transforms,
-                                                download=True)
-    cifar10test = torchvision.datasets.CIFAR10(root='data/', 
+                                                download=download)
+    cifar10test = torchvision.datasets.CIFAR10(root='data/cifar10_data/', 
                                                train=False, 
                                                transform=test_transforms, 
-                                               download=True)
+                                               download=download)
     
-    cifar10train_with_test_transforms = torchvision.datasets.CIFAR10(root='data/', 
+    cifar10train_with_test_transforms = torchvision.datasets.CIFAR10(root='data/cifar10_data/', 
                                                 transform=test_transforms,
-                                                download=True)
+                                                download=download)
     
     # Ensure CIFAR-10.1 data is in "data/" directory
-    with open('data/cifar10.1_v6_data.npy', 'rb') as f:
+    with open('data/cifar10_data/cifar10.1_v6_data.npy', 'rb') as f:
         ood_data = np.load(f)
-    with open('data/cifar10.1_v6_labels.npy', 'rb') as f:
+    with open('data/cifar10_data/cifar10.1_v6_labels.npy', 'rb') as f:
         ood_labels = np.load(f)
     
     transformed101data = torch.zeros(size=(len(ood_data), 3, 32, 32))
