@@ -13,7 +13,7 @@ import numpy as np
 torch.backends.cudnn.benchmark = True
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-from experiments.utils_cifar10 import get_cifar10_datasets, get_configs
+from experiments.old_utils import get_cifar10_datasets, get_configs
 
 
 # Seeding
