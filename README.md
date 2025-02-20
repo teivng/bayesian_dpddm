@@ -50,7 +50,7 @@ Run sweep agent with: ``wandb agent <my_wandb_team>/<my_project>/<my_sweep_id>``
 We execute a script to replace the ``wandb agent ...`` line in our ``.slrm`` files:
 
 ```
-experiments/replace_wandb_agent.sh "wandb agent <my_wandb_team>/<my_project>/<my_sweep_id>"
+./experiments/replace_wandb_agent.sh "wandb agent <my_wandb_team>/<my_project>/<my_sweep_id>"
 ```
 
 
