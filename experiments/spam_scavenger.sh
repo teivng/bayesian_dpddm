@@ -1,5 +1,5 @@
 #!/bin/bash
 
-for i in {0..500}; do
+for i in $(seq 0 ${1}); do
     sbatch "experiments/s_scavenger.slrm"
 done
