@@ -1,6 +1,6 @@
 project: bayesian_dpddm
-program: experiments/exp_cifar10.py
-method: bayes  
+program: experiments/run.py
+method: grid  
 metric:
   name: fpr_train
   goal: minimize

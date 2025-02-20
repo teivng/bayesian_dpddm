@@ -69,7 +69,6 @@ def main(args:DictConfig):
         os.makedirs('saved_weights', exist_ok=True)
         torch.save(monitor.model.state_dict(), os.path.join('saved_weights', f'{args.dataset.name}.pth'))
     
-    exit()
     # =========================================================
     # =============D-PDDM Training and Testing=================
     # =========================================================

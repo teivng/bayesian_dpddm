@@ -1,13 +1,14 @@
 from tqdm import tqdm
 import wandb 
-import sys
 import numpy as np
 import torch
+import multiprocessing
+from torch.utils.data import DataLoader, Dataset
+
 from ..models.base import DPDDMAbstractModel
 from ..configs import TrainConfig
-
-from torch.utils.data import DataLoader, Dataset
 from .utils import temperature_scaling, sample_from_dataset, get_class_from_string
+
 
 class DPDDMBayesianMonitor:
     """Defines the Bayesian DPDDM Monitor (Algorithms 3 and 4)
@@ -41,8 +42,10 @@ class DPDDMBayesianMonitor:
             lr=train_cfg.lr,
             weight_decay=train_cfg.wd,
         )
-        self.trainloader = DataLoader(self.trainset, batch_size=train_cfg.batch_size, shuffle=True)
-        self.valloader = DataLoader(self.valset, batch_size=train_cfg.batch_size, shuffle=True)
+        num_cpus = multiprocessing.cpu_count()
+        print(f'Setting the number of DataLoader workers to the number of CPUs available: {num_cpus}')
+        self.trainloader = DataLoader(self.trainset, batch_size=train_cfg.batch_size, shuffle=True, num_workers=num_cpus)
+        self.valloader = DataLoader(self.valset, batch_size=train_cfg.batch_size, shuffle=True, num_workers=num_cpus)
 
         self.output_metrics = {
             'train_loss': [],
