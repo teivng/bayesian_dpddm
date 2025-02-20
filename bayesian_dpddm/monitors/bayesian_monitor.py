@@ -36,12 +36,15 @@ class DPDDMBayesianMonitor:
         self.model = model
         self.trainset = trainset
         self.valset = valset
+        
+        # Get optimizer from string
         opt_cls = get_class_from_string(train_cfg.optimizer)
         self.optimizer = opt_cls(
             self.model.parameters(),
             lr=train_cfg.lr,
             weight_decay=train_cfg.wd,
         )
+        
         num_cpus = multiprocessing.cpu_count()
         print(f'Setting the number of DataLoader workers to the number of CPUs available: {num_cpus}')
         self.trainloader = DataLoader(self.trainset, batch_size=train_cfg.batch_size, shuffle=True, num_workers=num_cpus)
