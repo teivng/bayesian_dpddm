@@ -1,4 +1,4 @@
-from .models import DPDDMConvModel
+from .models import ConvModel, MLPModel
 from .monitors import DPDDMBayesianMonitor
 from ._metadata import *
 from importlib.metadata import version, PackageNotFoundError

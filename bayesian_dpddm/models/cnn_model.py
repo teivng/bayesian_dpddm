@@ -1,19 +1,17 @@
 import torch.nn as nn
 import torch.nn.functional as F
-import numpy as np
 
 import vbll
-from .utils import temperature_scaling
 from .base import DPDDMAbstractModel
-from ..configs import ConvModelConfig
+from ..configs import ModelConfig
 
 
-class DPDDMConvModel(DPDDMAbstractModel):
+class ConvModel(DPDDMAbstractModel):
     """DPDDM implementation with CNN features."""
     
-    def __init__(self, cfg:ConvModelConfig, train_size:int):
+    def __init__(self, cfg:ModelConfig, train_size:int):
         assert train_size is not None
-        super(DPDDMConvModel, self).__init__()
+        super(ConvModel, self).__init__()
         init_kernel_size = cfg.kernel_size + 2
         self.init_conv = nn.Conv2d(cfg.in_channels, cfg.mid_channels, kernel_size=init_kernel_size, padding=int((init_kernel_size-1)/2))
         
@@ -26,12 +24,13 @@ class DPDDMConvModel(DPDDMAbstractModel):
         flatten_dim = int(cfg.mid_channels * (32/4) ** 2)
         self.fc = nn.Linear(flatten_dim, cfg.hidden_dim)
         self.out_layer = vbll.DiscClassification(cfg.hidden_dim, 
-                                            cfg.out_features, 
-                                            cfg.reg_weight_factor * 1/train_size, 
-                                            parameterization = cfg.param, 
-                                            return_ood=cfg.return_ood,
-                                            prior_scale=cfg.prior_scale, 
-                                            wishart_scale=cfg.wishart_scale)
+                                                 cfg.out_features, 
+                                                 cfg.reg_weight_factor * 1/train_size, 
+                                                 parameterization = cfg.param, 
+                                                 return_ood=cfg.return_ood,
+                                                 prior_scale=cfg.prior_scale, 
+                                                 wishart_scale=cfg.wishart_scale
+                                                 )
                                             
         self.pool = nn.MaxPool2d(cfg.pool_dims, cfg.pool_dims)
         self.dropout = nn.Dropout(p=cfg.dropout)

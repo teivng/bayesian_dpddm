@@ -6,7 +6,7 @@ parentdir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pard
 sys.path.append(parentdir)
 
 import argparse
-from bayesian_dpddm import DPDDMConvModel, DPDDMBayesianMonitor
+from bayesian_dpddm import ConvModel, DPDDMBayesianMonitor
 import torch
 import numpy as np
 
@@ -83,7 +83,7 @@ def main():
     )
     
     ''' Build model and monitor '''
-    base_model = DPDDMConvModel(model_config,train_size=len(cifar10train))
+    base_model = ConvModel(model_config,train_size=len(cifar10train))
     monitor = DPDDMBayesianMonitor(
         model=base_model,
         trainset=cifar10train,

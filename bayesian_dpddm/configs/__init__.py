@@ -1,2 +1,2 @@
-from .model_configs import ConvModelConfig
+from .model_configs import ModelConfig
 from .train_configs import TrainConfig

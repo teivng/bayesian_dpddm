@@ -10,7 +10,7 @@ parentdir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pard
 sys.path.append(parentdir)
 
 import argparse
-from bayesian_dpddm import DPDDMConvModel, DPDDMBayesianMonitor
+from bayesian_dpddm import ConvModel, DPDDMBayesianMonitor, MLPModel
 import torch
 import numpy as np
 
@@ -24,6 +24,13 @@ from experiments.utils import get_datasets, get_configs
 RANDOM_SEED = 9927
 np.random.seed(RANDOM_SEED)
 torch.random.manual_seed(RANDOM_SEED)
+
+
+# base models
+base_models = {
+    'cifar10': ConvModel,
+    'uci': MLPModel,
+}
 
 @hydra.main(config_path='configs/', config_name='defaults', version_base='1.2')
 def main(args:DictConfig):
@@ -39,15 +46,11 @@ def main(args:DictConfig):
     # =========================================================
     
     ''' wandb initialization '''
+    wandb.config = OmegaConf.to_container(
+        args, resolve=True, throw_on_missing=True
+    )
+    
     run = wandb.init(project=args.wandb_cfg.project,
-                     config={
-                         'mid_channels': args.model.mid_channels,
-                         'kernel_size': args.model.kernel_size,
-                         'mid_layers': args.model.mid_layers,
-                         'hidden_dim': args.model.hidden_dim,
-                         'reg_weight_factor': args.model.reg_weight_factor,
-                         'temp': args.dpddm.temp
-                         },
                      settings=wandb.Settings(start_method='thread') # for hydra
                      )
     
@@ -58,7 +61,7 @@ def main(args:DictConfig):
     model_config, train_config = get_configs(args)
     
     ''' Build model and monitor '''
-    base_model = DPDDMConvModel(model_config,train_size=len(dataset['train']))
+    base_model = base_models[args.dataset.name](model_config, train_size=len(dataset['train']))
     monitor = DPDDMBayesianMonitor(
         model=base_model,
         trainset=dataset['train'],
@@ -110,7 +113,7 @@ def main(args:DictConfig):
         'dpddm_id': dataset['dpddm_id'],
         'dpddm_ood': dataset['dpddm_ood']
     }.items():
-        rate, max_dis_rates = monitor.repeat_tests(n_repeats=100,
+        rate, max_dis_rates = monitor.repeat_tests(n_repeats=args.dpddm.n_repeats,
                                       dataset=dataset, 
                                       n_post_samples=args.dpddm.n_post_samples,
                                       data_sample_size=args.dpddm.data_sample_size,

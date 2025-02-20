@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-
+from pprint import pprint
 
 @dataclass
 class ModelConfig:
@@ -13,6 +13,12 @@ class ModelConfig:
     prior_scale: float
     wishart_scale: float
     
+    def __str__(self):
+        self.print_config()
+        return ''
+    def print_config(self):
+        pprint(vars(self))
+    
     
 @dataclass
 class ConvModelConfig(ModelConfig):
@@ -24,5 +30,14 @@ class ConvModelConfig(ModelConfig):
     pool_dims: int
     hidden_dim: int
     dropout: float
+    return_ood: bool = False
     
+    
+@dataclass
+class MLPModelConfig(ModelConfig):
+    """Configuration for the base MLP model"""
+    in_features: int
+    mid_features: int
+    mid_layers: int
+    dropout: float
     return_ood: bool = False
