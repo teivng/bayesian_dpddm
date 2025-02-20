@@ -24,6 +24,41 @@ cd bayesian_dpddm
 pip install .
 ```
 
+## Sweeping Instructions
+
+All experiments are running from the root directory of the repo. We use ``hydra-core`` as an ``argparse`` on steroids, in tandem with ``wandb`` for sweeping. For a sweeping configuration ``experiments/my_sweep.yaml``, run:
+
+```
+wandb sweep experiments/my_sweep.yaml
+```
+
+for which ``wandb`` responds with:
+
+```
+wandb: Creating sweep from: experiments/my_sweep.yaml
+wandb: Creating sweep with ID: <my_sweep_id>
+wandb: View sweep at: https://wandb.ai/<my_wandb_team>/<my_project>/sweeps/<my_sweep_id>
+```
+
+### Sweeping locally
+Run sweep agent with: ``wandb agent <my_wandb_team>/<my_project>/<my_sweep_id>``.
+
+### Sweeping with ``slurm``
+
+``sbatch`` files format pre-configured for the Vaughan cluster. Edit the templates at will. 
+
+We execute a script to replace the ``wandb agent ...`` line in our ``.slrm`` files:
+
+```
+experiments/replace_wandb_agent.sh "wandb agent <my_wandb_team>/<my_project>/<my_sweep_id>"
+```
+
+
+
+
+
+
+
 ## Usage and Tutorials
 
 Coming soon.
