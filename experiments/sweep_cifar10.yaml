@@ -2,7 +2,7 @@ project: bayesian_dpddm
 program: experiments/run.py
 method: grid  
 metric:
-  name: fpr_train
+  name: fpr_id
   goal: minimize
 parameters:
   dataset:
@@ -24,4 +24,5 @@ command:
   - ${env}
   - python 
   - ${program}
+  - --config-name=cifar10
   - ${args_no_hyphens}

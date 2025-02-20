@@ -1,0 +1,27 @@
+project: bayesian_dpddm
+program: experiments/run.py
+method: bayes
+metric:
+  name: fpr_id
+  goal: minimize
+parameters:
+  dataset:
+    values: [uci]
+  model.mid_features:
+    values: [16, 32, 64, 128, 256]
+  model.mid_layers:
+    values: [1, 2, 3, 4, 6]
+  model.reg_weight_factor:
+    values: [0.1, 1, 10, 100, 1000]
+  dpddm.temp:
+    values: [1, 10, 20, 50, 100, 200]
+  dpddm.data_sample_size:
+    values: [10, 20, 50, 100]
+
+command: 
+  - ${env}
+  - python 
+  - ${program}
+  - --config-name=uci
+  - ${args_no_hyphens}
+  

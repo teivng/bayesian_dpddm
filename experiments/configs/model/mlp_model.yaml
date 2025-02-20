@@ -2,7 +2,7 @@ name: mlp_model
 in_features: 9
 mid_features: 128
 mid_layers: 3
-dropout: 0.3
+dropout: 0.2
 
 reg_weight_factor: 100
 param: diagonal
