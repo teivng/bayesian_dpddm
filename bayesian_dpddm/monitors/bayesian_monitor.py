@@ -46,9 +46,9 @@ class DPDDMBayesianMonitor:
         )
         
         num_cpus = multiprocessing.cpu_count()
-        print(f'Setting the number of DataLoader workers to the number of CPUs available: {num_cpus}')
-        self.trainloader = DataLoader(self.trainset, batch_size=train_cfg.batch_size, shuffle=True, num_workers=num_cpus)
-        self.valloader = DataLoader(self.valset, batch_size=train_cfg.batch_size, shuffle=True, num_workers=num_cpus)
+        #print(f'Setting the number of DataLoader workers to the number of CPUs available: {num_cpus}')
+        self.trainloader = DataLoader(self.trainset, batch_size=train_cfg.batch_size, shuffle=True, num_workers=4)
+        self.valloader = DataLoader(self.valset, batch_size=train_cfg.batch_size, shuffle=True, num_workers=4)
 
         self.output_metrics = {
             'train_loss': [],
