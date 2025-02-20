@@ -1,6 +1,6 @@
 project: bayesian_dpddm
 program: experiments/run.py
-method: bayes
+method: grid
 metric:
   name: fpr_id
   goal: minimize
