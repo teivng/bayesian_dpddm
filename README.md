@@ -53,6 +53,13 @@ We execute a script to replace the ``wandb agent ...`` line in our ``.slrm`` fil
 ./experiments/replace_wandb_agent.sh "wandb agent <my_wandb_team>/<my_project>/<my_sweep_id>"
 ```
 
+Finally, spam jobs on the cluster and maximize your allocation per ``qos``: 
+
+```
+./experiments/sbatch_all.sh
+```
+
+Edit this script per your allocation. 
 
 
 
