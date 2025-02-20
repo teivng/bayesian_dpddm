@@ -3,6 +3,7 @@ os.environ['HYDRA_FULL_ERROR'] = "1"
 import wandb
 import hydra
 from omegaconf import DictConfig
+from omegaconf import OmegaConf
 
 import sys
 parentdir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
@@ -26,7 +27,14 @@ torch.random.manual_seed(RANDOM_SEED)
 
 @hydra.main(config_path='configs/', config_name='defaults', version_base='1.2')
 def main(args:DictConfig):
+
     # =========================================================
+    # =============Print All Configurations====================
+    # =========================================================
+    
+    print("Hydra Configuration:")
+    print(OmegaConf.to_yaml(args))
+    
     # ==================Initialization=========================
     # =========================================================
     
@@ -39,7 +47,9 @@ def main(args:DictConfig):
                          'hidden_dim': args.model.hidden_dim,
                          'reg_weight_factor': args.model.reg_weight_factor,
                          'temp': args.dpddm.temp
-                         })
+                         },
+                     settings=wandb.Settings(start_method='thread') # for hydra
+                     )
     
     ''' Get datasets '''
     dataset = get_datasets(args) 
@@ -58,7 +68,7 @@ def main(args:DictConfig):
     )
     
     # =========================================================
-    # ===================Base Training=========================
+    # ==============Base Classifier Training===================
     # =========================================================
     
     ''' Load base model if pretrained, else train '''
@@ -70,7 +80,7 @@ def main(args:DictConfig):
         torch.save(monitor.model.state_dict(), os.path.join('saved_weights', f'{args.dataset.name}.pth'))
     
     # =========================================================
-    # =============D-PDDM Training and Testing=================
+    # ===================D-PDDM Training=======================
     # =========================================================
     
     ''' Pretrain the disagreement distribution Phi '''
@@ -87,6 +97,10 @@ def main(args:DictConfig):
         'Phi-std': np.std(monitor.Phi),
         'Phi-med': np.median(monitor.Phi)
     })
+    
+    # =========================================================
+    # ===================D-PDDM Testing========================
+    # =========================================================
     
     ''' Test TPR/FPR on all datasets '''
     stats = {}
