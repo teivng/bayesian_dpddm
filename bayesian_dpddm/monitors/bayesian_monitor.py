@@ -1,13 +1,13 @@
 from tqdm import tqdm
 import wandb 
-
+import sys
 import numpy as np
 import torch
 from ..models.base import DPDDMAbstractModel
 from ..configs import TrainConfig
 
 from torch.utils.data import DataLoader, Dataset
-from .utils import temperature_scaling, sample_from_dataset
+from .utils import temperature_scaling, sample_from_dataset, get_class_from_string
 
 class DPDDMBayesianMonitor:
     """Defines the Bayesian DPDDM Monitor (Algorithms 3 and 4)
@@ -35,8 +35,8 @@ class DPDDMBayesianMonitor:
         self.model = model
         self.trainset = trainset
         self.valset = valset
-        
-        self.optimizer = train_cfg.optimizer(
+        opt_cls = get_class_from_string(train_cfg.optimizer)
+        self.optimizer = opt_cls(
             self.model.parameters(),
             lr=train_cfg.lr,
             weight_decay=train_cfg.wd,

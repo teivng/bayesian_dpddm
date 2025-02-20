@@ -31,7 +31,6 @@ def main(args:DictConfig):
     # =========================================================
     
     ''' wandb initialization '''
-    '''
     run = wandb.init(project=args.wandb_cfg.project,
                      config={
                          'mid_channels': args.model.mid_channels,
@@ -40,17 +39,13 @@ def main(args:DictConfig):
                          'hidden_dim': args.model.hidden_dim,
                          'reg_weight_factor': args.model.reg_weight_factor,
                          'temp': args.dpddm.temp
-                         })'''
+                         })
     
     ''' Get datasets '''
     dataset = get_datasets(args) 
     
-    
     ''' Get config objects '''
     model_config, train_config = get_configs(args)
-    
-    
-    exit()
     
     ''' Build model and monitor '''
     base_model = DPDDMConvModel(model_config,train_size=len(dataset['train']))
@@ -58,7 +53,7 @@ def main(args:DictConfig):
         model=base_model,
         trainset=dataset['train'],
         valset=dataset['valid'],
-        train_args=train_config,
+        train_cfg=train_config,
         device=device,
     )
     
@@ -74,16 +69,17 @@ def main(args:DictConfig):
         os.makedirs('saved_weights', exist_ok=True)
         torch.save(monitor.model.state_dict(), os.path.join('saved_weights', f'{args.dataset.name}.pth'))
     
+    exit()
     # =========================================================
     # =============D-PDDM Training and Testing=================
     # =========================================================
     
     ''' Pretrain the disagreement distribution Phi '''
     monitor.pretrain_disagreement_distribution(dataset=dataset['dpddm_train'],
-                                               n_post_samples=args.n_post_samples,
-                                               data_sample_size=args.data_sample_size,
-                                               Phi_size=args.Phi_size, 
-                                               temperature=args.temp,
+                                               n_post_samples=args.dpddm.n_post_samples,
+                                               data_sample_size=args.dpddm.data_sample_size,
+                                               Phi_size=args.dpddm.Phi_size, 
+                                               temperature=args.dpddm.temp,
                                                )
     
     ''' wandb log Phi statistics '''
@@ -91,7 +87,6 @@ def main(args:DictConfig):
         'Phi-mean': np.mean(monitor.Phi),
         'Phi-std': np.std(monitor.Phi),
         'Phi-med': np.median(monitor.Phi)
-         
     })
     
     ''' Test TPR/FPR on all datasets '''
@@ -104,9 +99,9 @@ def main(args:DictConfig):
     }.items():
         rate, max_dis_rates = monitor.repeat_tests(n_repeats=100,
                                       dataset=dataset, 
-                                      n_post_samples=args.n_post_samples,
-                                      data_sample_size=args.data_sample_size,
-                                      temperature=args.temp
+                                      n_post_samples=args.dpddm.n_post_samples,
+                                      data_sample_size=args.dpddm.data_sample_size,
+                                      temperature=args.dpddm.temp
                                       )
         print(f"{k}: {rate}")
         stats[k] = rate
@@ -115,13 +110,13 @@ def main(args:DictConfig):
     ''' wandb log statistics '''
     wandb.log({
         'fpr_train': stats['dpddm_train'],
-        'fpr_test': stats['dpddm_id'],
+        'fpr_id': stats['dpddm_id'],
         'tpr': stats ['dpddm_ood']
     })
     wandb.log({
-        'dis_rates_train': dis_rates['cifar10-train'],
-        'dis_rates_test': dis_rates['cifar10-test'],
-        'dis_rates_ood': dis_rates['cifar10.1']
+        'dr_train': dis_rates['dpddm_train'],
+        'dr_test': dis_rates['dpddm_id'],
+        'dr_ood': dis_rates['dpddm_ood']
     })
     
     return 0

@@ -2,12 +2,10 @@ import torch
 import numpy as np
 from torchvision.transforms import v2 
 import torchvision
-import argparse
 import inspect
 from bayesian_dpddm.configs import ConvModelConfig, TrainConfig
-from omegaconf import DictConfig
+from omegaconf import DictConfig, OmegaConf
 import os
-
 
 def print_args_and_kwargs(*args, **kwargs):
     """Prints all args and kwargs"""
@@ -38,18 +36,20 @@ def filter_args(cls, args):
 
 
 def get_configs(args:DictConfig):
-    """From parsed arguments, generate ConvModelConfig and TrainConfig configs for the experiment.
+    """From parsed arguments, generate ModelConfig and TrainConfig configs for the experiment.
 
     Args:
-        args (argparse.Namespace): parsed argument
+        args (argparse.Namespace): hydra argument
 
     Returns:
-        tuple(ConvModelConfig, TrainConfig): 2-tuple containing:
+        tuple(ModelConfig, TrainConfig): 2-tuple containing:
         the model and train configs respectively.
     """
+    model_args = OmegaConf.to_container(args.model)
+    train_args = OmegaConf.to_container(args.train)
     if args.dataset.name == 'cifar10':
-        model_config = ConvModelConfig(**filter_args(ConvModelConfig, args))
-        train_config = TrainConfig(**filter_args(TrainConfig, args))
+        model_config = ConvModelConfig(**model_args)
+        train_config = TrainConfig(**train_args)
     elif args.dataset.name == 'uci': 
         raise NotImplementedError
     

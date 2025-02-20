@@ -10,7 +10,6 @@ class TrainConfig:
     batch_size: int
     lr: float
     wd: float
-    optimizer: torch.optim.Optimizer = torch.optim.AdamW
+    optimizer: str
     clip_val: float = 1
     val_freq: int = 1
-    
