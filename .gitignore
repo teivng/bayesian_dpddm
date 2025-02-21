@@ -1,5 +1,5 @@
 __pycache__/
-data/
+
 saved_weights/
 bayesian_dpddm.egg-info/
 build/
@@ -8,3 +8,6 @@ slurm/
 wandb/
 logs/
 outputs/
+
+# ignore big data, small data can be uploaded
+data/cifar10_data/
