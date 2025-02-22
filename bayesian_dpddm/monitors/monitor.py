@@ -29,7 +29,7 @@ class DPDDMMonitor(ABC):
             - pretrain_disagreement_distribution: generates self.Phi
             - repeat_tests: repeats the D-PDDM test (Algorithms 2 and 4) on the given dataset
                             useful in computing FPRs and TPRs. 
-        - Unimplemented:
+        - Need to override:
             - train_model: trains the base classifier self.model
             - get_pseudolabels: given some data, assign pseudolabels according to self.model
             - compute_max_dis_rate: given data and pseudolabels, computes the maximum disagreement
