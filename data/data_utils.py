@@ -82,6 +82,7 @@ def get_cifar10_datasets(args:DictConfig, download=True):
         tuple(Dataset, Dataset, Dataset, CIFAR101Dataset): 4-tuple containing:
         CIFAR10 train, test, train with test transforms, and CIFAR10.1. 
     """
+    os.makedirs(args.dataset.data_dir, exist_ok=True)
     cifar10train = torchvision.datasets.CIFAR10(root=args.dataset.data_dir, 
                                                 transform=train_transforms,
                                                 download=download)
@@ -140,7 +141,9 @@ def get_uci_datasets(args:DictConfig) -> dict:
     Returns:
         dict: dictionary containing all splits of the UCI Heart Disease processed dataset.
     """
-    data_dict = torch.load(os.path.join(args.dataset.data_dir, 'uci_heart_torch.pt'))
+    data_path = os.path.join(args.dataset.data_dir, 'uci_heart_torch.pt')
+    assert os.path.exists(data_path)        
+    data_dict = torch.load(data_path)
     processed_dict = {}
     for k, data in data_dict.items():
         data = list(zip(*data))
