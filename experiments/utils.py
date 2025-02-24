@@ -77,11 +77,11 @@ def get_datasets(args:DictConfig):
     dataset_dict = {}
     name = args.dataset.name
     if name == 'cifar10':
-        train, test, test_no_aug, ood = get_cifar10_datasets(args, download=True)
+        train, val, id, ood = get_cifar10_datasets(args, download=True)
         dataset_dict['train'] = train
-        dataset_dict['valid'] = test
-        dataset_dict['dpddm_train'] = test        # train dpddm using the CIFAR-10 validation set (10k)
-        dataset_dict['dpddm_id'] = test_no_aug    # validate dpddm using the CIFAR-10 training set (50k)
+        dataset_dict['valid'] = val
+        dataset_dict['dpddm_train'] = val         # train dpddm using the CIFAR-10 validation set (10k)
+        dataset_dict['dpddm_id'] = id             # validate dpddm using the CIFAR-10 test set (10k)
         dataset_dict['dpddm_ood'] = ood
     
     elif name == 'uci':

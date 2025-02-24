@@ -5,13 +5,14 @@ import torch
 import torchvision
 from torchvision.transforms import v2
 from omegaconf import DictConfig
+from torch.utils.data import Dataset, Subset
 
 
 # ================================================
 # ===========General Data Utilities===============
 # ================================================
 
-class TensorDataset(torch.utils.data.Dataset, ABC):
+class TensorDataset(Dataset, ABC):
     """Abstract torch tensor dataset class.
     Requires an implementation of TensorDataset.__str__
 
@@ -76,24 +77,50 @@ class CIFAR101Dataset(TensorDataset):
 
 
 def get_cifar10_datasets(args:DictConfig, download=True):
-    """Returns processed CIFAR10 and CIFAR10.1 Dataset objects. 
+    """Returns processed CIFAR10 and CIFAR10.1 Dataset objects
+    We split the train dataset into a trainset and a validation set
+    The validation set has two purposes: 
+        - Validate the training of the base model
+        - Train the distribution of in-distribution maximum disagreement rates (Phi)
+    The CIFAR-10 test set will be used to validate the training of Phi, i.e. an iid_test sample
+    The CIFAR-10.1 o.o.d. set will be used to study the TPR of bayesian D-PDDM.
 
     Returns:
         tuple(Dataset, Dataset, Dataset, CIFAR101Dataset): 4-tuple containing:
         CIFAR10 train, test, train with test transforms, and CIFAR10.1. 
     """
     os.makedirs(args.dataset.data_dir, exist_ok=True)
-    cifar10train = torchvision.datasets.CIFAR10(root=args.dataset.data_dir, 
-                                                transform=train_transforms,
-                                                download=download)
+    # Loads the cifar-10 test set
     cifar10test = torchvision.datasets.CIFAR10(root=args.dataset.data_dir, 
                                                train=False, 
                                                transform=test_transforms, 
                                                download=download)
     
-    cifar10train_with_test_transforms = torchvision.datasets.CIFAR10(root=args.dataset.data_dir, 
-                                                transform=test_transforms,
+    # make the cifar-10 train and validation sets
+    cifar10train = torchvision.datasets.CIFAR10(root=args.dataset.data_dir,
+                                                train=True, 
+                                                transform=None,
                                                 download=download)
+    
+    cifar10train, cifar10val = torch.utils.data.random_split(cifar10train, [40000, 10000])
+    cifar10train = torch.utils.data.Subset(
+        dataset=torchvision.datasets.CIFAR10(
+            root=args.dataset.data_dir,
+            train=True,
+            transform=train_transforms,
+            download=True
+        ),
+        indices=cifar10train.indices
+    )
+    cifar10val = torch.utils.data.Subset(
+        dataset=torchvision.datasets.CIFAR10(
+            root=args.dataset.data_dir,
+            train=True,
+            transform=test_transforms,
+            download=True
+        ),
+        indices=cifar10train.indices
+    )
     
     # Ensure CIFAR-10.1 data is in "data/" directory
     with open(os.path.join(args.dataset.data_dir, 'cifar10.1_v6_data.npy'), 'rb') as f:
@@ -106,7 +133,7 @@ def get_cifar10_datasets(args:DictConfig, download=True):
         transformed101data[idx] = test_transforms(ood_data[idx])
     transformed101labels = torch.as_tensor(ood_labels, dtype=torch.long)
     cifar101 = CIFAR101Dataset(transformed101data, transformed101labels)
-    return cifar10train, cifar10test, cifar10train_with_test_transforms, cifar101
+    return cifar10train, cifar10val, cifar10test, cifar101
 
 
 # ================================================
