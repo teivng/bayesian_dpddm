@@ -119,7 +119,7 @@ def get_cifar10_datasets(args:DictConfig, download=True):
             transform=test_transforms,
             download=True
         ),
-        indices=cifar10train.indices
+        indices=cifar10val.indices
     )
     
     # Ensure CIFAR-10.1 data is in "data/" directory
