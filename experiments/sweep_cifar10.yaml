@@ -8,17 +8,17 @@ parameters:
   dataset:
     values: [cifar10]
   model.mid_channels:
-    values: [64, 128, 256, 512]
+    values: [128, 256, 512, 1024]
   model.kernel_size:
     values: [3, 5, 7]
   model.mid_layers:
-    values: [1, 2, 3, 4]
+    values: [2, 3, 4]
   model.hidden_dim:
     values: [128, 256, 512]
   model.reg_weight_factor:
     values: [1, 10, 100, 1000]
   dpddm.data_sample_size:
-    values: [200]
+    values: [100]
   dpddm.temp:
     values: [1, 10, 100, 1000]
 
