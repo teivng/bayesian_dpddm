@@ -54,6 +54,6 @@ done
 echo "Submitted s_m5.slrm"
 
 for i in $(seq 0 ${3}); do
-    sbatch "experiments/s_scavenger.slrm"
+    sbatch "experiments/slrm/s_scavenger.slrm"
 done
 
