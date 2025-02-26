@@ -5,7 +5,9 @@ Bayesian implementation of the D-PDDM algorithm for post-deployment deterioratio
 - Flags deteriorating shifts in the unsupervised deployment data distribution
 - Resists flagging non-deteriorating shifts, unlike classical OOD detection leveraging distances and/or metrics between data distributions. 
 
-## Install
+## Installation and Requirements
+
+This implementation requires ``python>=3.11``. 
 
 The easiest way to install ``bayesian_dpddm`` is with ``pip``:
 
