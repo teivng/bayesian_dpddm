@@ -17,7 +17,7 @@ You can also install by cloning the GitHub repo:
 
 ```
 # Clone the repo
-git clone https://github.com/opent03/bayesian_dpddm.git
+git clone https://github.com/teivng/bayesian_dpddm.git
 
 # Navigate into repo directory 
 cd bayesian_dpddm
@@ -62,10 +62,6 @@ Finally, spam jobs on the cluster and maximize your allocation per ``qos``:
 ```
 
 Edit this script per your allocation. 
-
-
-
-
 
 
 ## Usage and Tutorials

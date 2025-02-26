@@ -29,7 +29,7 @@ dependencies = [
 license = { file = "LICENSE" }
 
 [project.urls]
-homepage = "https://github.com/opent03/bayesian_dpddm"
+homepage = "https://github.com/teivng/bayesian_dpddm"
 
 [tool.setuptools.packages.find]
 where = ["."]
