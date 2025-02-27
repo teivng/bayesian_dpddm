@@ -89,7 +89,8 @@ def main(args:DictConfig):
     ''' Pretrain the disagreement distribution Phi '''
     monitor.pretrain_disagreement_distribution(dataset=dataset['dpddm_train'],
                                                n_post_samples=args.dpddm.n_post_samples,
-                                               data_sample_size=args.dpddm.data_sample_size,
+                                               #data_sample_size=args.dpddm.data_sample_size,
+                                               data_sample_size=len(dataset['dpddm_train']),
                                                Phi_size=args.dpddm.Phi_size, 
                                                temperature=args.dpddm.temp,
                                                )
