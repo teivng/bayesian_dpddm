@@ -70,7 +70,7 @@ class DPDDMMonitor(ABC):
         
         # For DPDDM pretraining
         self.Phi = []
-
+        self.replace = True
         # To device
         self.model = self.model.to(self.device)
         
@@ -89,13 +89,15 @@ class DPDDMMonitor(ABC):
         return (map_preds == y).float().mean()
     
     
-    def dpddm_test(self, dataset:Dataset, data_sample_size:int=1000, alpha=0.95, *args, **kwargs) -> Tuple[float, bool]:
+    def dpddm_test(self, dataset:Dataset, data_sample_size:int=1000, alpha=0.95, replace=True, *args, **kwargs) -> Tuple[float, bool]:
         """Given a dataset, computes the maximum disagreement rate as well as the OOD verdict.
         Used to both generate Phi and Algorithms 2 and 4.
 
         Args:
             dataset (Dataset): dataset object
-            data_sample_size (int, optional): size of bootstraped dataset. Defaults to 1000.
+            data_sample_size (int, optional): size of bootstraped dataset. Defaults to 1000
+            alpha (float): statistical power of the test. Defaults to 0.95
+            replace (bool): sample with replacement. Defaults to True
 
         Returns:
             tuple(float, bool): 2-tuple containing:
@@ -104,9 +106,8 @@ class DPDDMMonitor(ABC):
             - OOD verdict w.r.t. self.Phi
         """
         with torch.no_grad():
-            X = sample_from_dataset(n_samples=data_sample_size, dataset=dataset, device=self.device)
+            X, _ = sample_from_dataset(n_samples=data_sample_size, dataset=dataset, replace=replace)
             y_pseudo = self.get_pseudolabels(X)
-            X, y_pseudo = X.to(self.device), y_pseudo.to(self.device)
             max_dis_rate = self.compute_max_dis_rate(X, y_pseudo, *args, **kwargs)
         return max_dis_rate, max_dis_rate >= np.quantile(self.Phi, alpha) if self.Phi != [] else 0 
     
@@ -123,7 +124,7 @@ class DPDDMMonitor(ABC):
         self.model.eval()
         with torch.no_grad():
             for i in f(range(Phi_size)):
-                max_dis_rate, _ = self.dpddm_test(dataset, *args, **kwargs)
+                max_dis_rate, _ = self.dpddm_test(dataset, replace=self.replace, *args, **kwargs)
                 self.Phi.append(max_dis_rate)
     
     
@@ -141,7 +142,7 @@ class DPDDMMonitor(ABC):
             tprs = []
             max_dis_rates = []
             for i in tqdm(range(n_repeats)):
-                max_dis_rate, result = self.dpddm_test(dataset=dataset, *args, **kwargs)
+                max_dis_rate, result = self.dpddm_test(dataset=dataset, replace=self.replace, *args, **kwargs)
                 tprs.append(result)
                 max_dis_rates.append(max_dis_rate)
             return np.mean(tprs), max_dis_rates

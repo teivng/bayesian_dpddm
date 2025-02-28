@@ -7,7 +7,7 @@ def temperature_scaling(logits, temperature):
     return logits / temperature
 
 
-def sample_from_dataset(n_samples:int, dataset:Dataset, device:torch.device, replace=True):
+def sample_from_dataset(n_samples:int, dataset:Dataset, replace=True):
     """Given a dataset, sample n_samples.
 
     Args:
@@ -22,10 +22,11 @@ s
     data_size = dataset[0][0].size()
     indices = np.random.choice(np.arange(len(dataset)), n_samples, replace=replace)
     tmp = torch.zeros(size=(n_samples, *data_size))
+    true_labels = torch.zeros(size=(n_samples,))
     for i in range(len(indices)):
         tmp[i] = dataset[indices[i]][0]
-    tmp = tmp.to(device)
-    return tmp
+        true_labels[i] = dataset[indices[i]][1]
+    return tmp, true_labels
 
 
 def get_class_from_string(class_string):

@@ -2,14 +2,12 @@ import os
 os.environ['HYDRA_FULL_ERROR'] = "1"
 import wandb
 import hydra
-from omegaconf import DictConfig
-from omegaconf import OmegaConf
+from omegaconf import DictConfig, OmegaConf
 
 import sys
 parentdir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pardir))
 sys.path.append(parentdir)
 
-import argparse
 from bayesian_dpddm import ConvModel, DPDDMBayesianMonitor, MLPModel
 import torch
 import numpy as np
@@ -89,8 +87,7 @@ def main(args:DictConfig):
     ''' Pretrain the disagreement distribution Phi '''
     monitor.pretrain_disagreement_distribution(dataset=dataset['dpddm_train'],
                                                n_post_samples=args.dpddm.n_post_samples,
-                                               #data_sample_size=args.dpddm.data_sample_size,
-                                               data_sample_size=len(dataset['dpddm_train']),
+                                               data_sample_size=args.dpddm.data_sample_size,
                                                Phi_size=args.dpddm.Phi_size, 
                                                temperature=args.dpddm.temp,
                                                )
@@ -132,7 +129,7 @@ def main(args:DictConfig):
     })
     wandb.log({
         'dr_train': dis_rates['dpddm_train'],
-        'dr_test': dis_rates['dpddm_id'],
+        'dr_id': dis_rates['dpddm_id'],
         'dr_ood': dis_rates['dpddm_ood']
     })
     
