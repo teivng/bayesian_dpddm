@@ -11,3 +11,4 @@ outputs/
 
 # ignore big data, small data can be uploaded
 data/cifar10_data/
+.DS_Store
