@@ -3,6 +3,16 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 from typing import Optional
+from torch.utils.data import DataLoader, Dataset
+
+class MaskedDataset(Dataset):
+    def __init__(self, dataset: Dataset, mask=True):
+        self.dataset = dataset
+        self.mask = torch.tensor(mask, dtype=torch.long)
+
+    def __getitem__(self, index):
+        x, y = self.dataset[index]
+        return x, y, self.mask
 
 
 def temperature_scaling(logits, temperature):
