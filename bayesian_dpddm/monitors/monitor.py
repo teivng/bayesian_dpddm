@@ -109,6 +109,8 @@ class DPDDMMonitor(ABC):
             X, _ = sample_from_dataset(n_samples=data_sample_size, dataset=dataset, replace=replace)
             y_pseudo = self.get_pseudolabels(X)
             max_dis_rate = self.compute_max_dis_rate(X, y_pseudo, *args, **kwargs)
+
+
         return max_dis_rate, max_dis_rate >= np.quantile(self.Phi, alpha) if self.Phi != [] else 0 
     
     
