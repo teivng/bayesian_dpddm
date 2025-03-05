@@ -8,7 +8,10 @@ from torch.utils.data import DataLoader, Dataset
 class MaskedDataset(Dataset):
     def __init__(self, dataset: Dataset, mask=True):
         self.dataset = dataset
-        self.mask = torch.tensor(mask, dtype=torch.long)
+        self.mask = torch.tensor(mask, dtype=torch.bool)
+    
+    def __len__(self):
+        return len(self.dataset)
 
     def __getitem__(self, index):
         x, y = self.dataset[index]
@@ -105,11 +108,9 @@ class FILoss(torch.nn.Module):
 
     def forward(self, logits, labels, mask):
         return self.full_info_loss(logits, labels,
-                        weight=self.weight,
-                        mask=mask,
-                        alpha=self.alpha)
+                        mask)
     
-    def full_info_loss(logits: torch.Tensor, labels: torch.Tensor, mask: torch.Tensor, alpha: Optional[float] = None,
+    def full_info_loss(self, logits: torch.Tensor, labels: torch.Tensor, mask: torch.Tensor, alpha: Optional[float] = None,
              weight=None) -> torch.Tensor:
         """
         :param logits: (batch_size, num_classes) tensor of logits
@@ -119,13 +120,18 @@ class FILoss(torch.nn.Module):
         :param weight:  (torch.Tensor) weight for each sample_data, default=None do not apply weighting
         :return: (tensor, float) the disagreement cross entropy loss
         """
+
         if mask.all():
             # if all labels are positive, then use the standard cross entropy loss
             return F.cross_entropy(logits, labels)
+        
+        if alpha is None:
+            alpha = 1 / (1 + (~mask).float().sum())
 
         num_classes = logits.shape[1]
 
         q_logits, q_labels = logits[~mask], labels[~mask]
+
 
         zero_hot = 1. - F.one_hot(q_labels, num_classes=num_classes)
         ce_n = -(q_logits * zero_hot).sum(dim=1) / (num_classes - 1) + torch.logsumexp(q_logits, dim=1)
@@ -137,5 +143,6 @@ class FILoss(torch.nn.Module):
             return (ce_n * alpha).mean()
 
         p_logits, p_labels = logits[mask], labels[mask]
+
         ce_p = F.cross_entropy(p_logits, p_labels, reduction='none', weight=weight)
         return torch.cat([ce_n * alpha, ce_p]).mean()

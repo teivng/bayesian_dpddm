@@ -27,14 +27,18 @@ class DPDDMFullInformationMoniter(DPDDMMonitor):
         """
         full_netowrk_ft (bool): whether to fine-tune the full network (if false, only the last layer is fine-tuned)
         """
-        super(DPDDMBayesianMonitor, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
         self.full_network_ft = full_network_ft
         
         # Over-write the models final layer
         self.model.out_layer = torch.nn.Linear(self.model.cfg.mid_features, self.model.cfg.out_features)
+        self.model.to(self.device)
         self.rejection_loss_fn = FILoss()
         self.loss_fn = torch.nn.CrossEntropyLoss()
+        self.probs = torch.nn.Softmax()
+
+        
     
     def train_model(self, tqdm_enabled=False):
         """Initial training of the model.
@@ -54,9 +58,10 @@ class DPDDMFullInformationMoniter(DPDDMMonitor):
                 self.optimizer.zero_grad()
                 features, labels = features.to(self.device), labels.to(self.device)
                 out = self.model(features)
-                loss = self.loss_fn(out, labels)
-                probs = out.predictive.probs
-                acc = self.eval_acc(probs, labels).item()
+                loss = self.loss_fn(out, labels.to(torch.long))
+                with torch.no_grad():
+                    probs = self.probs(out)
+                    acc = self.eval_acc(probs, labels).item()
                 running_loss.append(loss.item())
                 running_acc.append(acc)
                 loss.backward()
@@ -72,9 +77,10 @@ class DPDDMFullInformationMoniter(DPDDMMonitor):
                         features, labels = features.to(self.device), labels.to(self.device)
 
                         out = self.model(features)
-                        loss = out.val_loss_fn(labels)
-                        probs = out.predictive.probs
-                        acc = self.eval_acc(probs, labels).item()
+                        loss = self.loss_fn(out, labels.to(torch.long))
+                        with torch.no_grad():
+                            probs = self.probs(out)
+                            acc = self.eval_acc(probs, labels).item()
 
                         running_val_loss.append(loss.item())
                         running_val_acc.append(acc)
@@ -125,61 +131,47 @@ class DPDDMFullInformationMoniter(DPDDMMonitor):
         Returns:
             float: approximate maximum disagreement rate
         """
-        X, y, mask = X.to(self.device), y.to(self.device), mask.to(self.device)
-
-        disagreement_model = copy.deepcopy(self.model)
+        disagreement_model = self.model
         disagreement_model.train()
         disagreement_model.to(self.device)
+
+        opt_cls = get_class_from_string(self.train_cfg.optimizer)
+        disagreement_optimizer =  opt_cls(
+            disagreement_model.parameters(),
+            lr=self.train_cfg.lr,
+            weight_decay=self.train_cfg.wd,
+        )
 
         # Create a datalaoder with the 50 ood samples and the train dataset in order to learn to agree with train and disagree with ood.
         joint_dataset = (
             MaskedDataset(self.trainset, mask=True) + 
-            MaskedDataset(TensorDataset(X, y), mask=False)
+            MaskedDataset(TensorDataset(X, y.cpu()), mask=False)
         )
 
         rejection_loader = DataLoader(joint_dataset, batch_size=32, shuffle=True)
 
         # TODO: Implement the fine tuning of disagreement_mode
-        if not self.full_network_ft:
-            for param in self.disagreement_model.parameters():
-                param.requires_grad = False
-        
-        for epoch in (range(10)):
-            for train_step, (features, labels, mask) in enumerate(rejection_loader):
-                self.optimizer.zero_grad()
-                features, labels, mask = features.to(self.device), labels.to(self.device), mask.to(self.device)
-                out = self.model(features)
-                loss = self.rejection_loss_fn(out, labels, mask)
-                loss.backward()
-                self.optimizer.step()
-        
-        # Post training, compute the disagreement rate + accuracy on original dataset
-                
-        disagreement_model.eval()
-        y_hat_ft = disagreement_model(X)
-        dis_rate = (y != y_hat_ft).sum() / len(y)
-        
-        return dis_rate
-    
 
-    # def dpddm_test(self, dataset:Dataset, data_sample_size:int=1000, alpha=0.95, balance_ratio=0.5, replace=True, *args, **kwargs) -> Tuple[float, bool]:
-    #     """Given a dataset, computes the maximum disagreement rate as well as the OOD verdict.
-    #     Used to both generate Phi and Algorithms 2 and 4.
+        # if not self.full_network_ft:
+        #     for param in disagreement_model.parameters():
+        #         param.requires_grad = Falses
 
-    #     Args:
-    #         dataset (Dataset): dataset object
-    #         data_sample_size (int, optional): size of bootstraped dataset. Defaults to 1000
-    #         alpha (float): statistical power of the test. Defaults to 0.95
-    #         replace (bool): sample with replacement. Defaults to True
+        X, y = X.to(self.device), y.to(self.device)
 
-    #     Returns:
-    #         tuple(float, bool): 2-tuple containing:
-    #         - maximum disagreement rate achievable by models from the same hypothesis class
-    #             while (approximately) maintaining correctness on training set
-    #         - OOD verdict w.r.t. self.Phi
-    #     """
-    #     with torch.no_grad():
-    #         X, _, mask = joint_sample_from_datasets(n_samples=data_sample_size, datasetA=self.trainset, datasetB=dataset, balance_ratio=balance_ratio, replace=replace)
-    #         y_pseudo = self.get_pseudolabels(X)
-    #         max_dis_rate = self.compute_max_dis_rate(X, y_pseudo, mask=mask *args, **kwargs)
-    #     return max_dis_rate, max_dis_rate >= np.quantile(self.Phi, alpha) if self.Phi != [] else 0 
+        disagreement_model.to(self.device)
+        with torch.set_grad_enabled(True):
+            for epoch in (range(10)):
+                disagreement_model.train()
+                for train_step, (features, labels, mask) in enumerate(rejection_loader):
+                    disagreement_optimizer.zero_grad()
+                    features, labels, mask = features.to(self.device), labels.to(torch.long).to(self.device), mask.to(self.device)
+                    out = disagreement_model(features)
+                    loss = self.rejection_loss_fn(out, labels, mask)
+                    loss.backward()
+                    disagreement_optimizer.step()
+                                
+            disagreement_model.eval()
+            y_hat_ft = torch.argmax(disagreement_model(X), dim=1)
+            dis_rate = (y != y_hat_ft).sum() / len(y)
+        
+        return dis_rate.item()
