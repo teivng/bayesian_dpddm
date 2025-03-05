@@ -29,8 +29,7 @@ def sample_from_dataset(n_samples:int, dataset:Dataset, replace=True):
         n_samples (int): number of samples to sample
         dataset (Dataset): torch Dataset object
         replace (bool, optional): Whether to sample with replacement. Defaults to True.
-clear
-s
+
     Returns:
         torch.tensor: sample from dataset.
     """
@@ -52,8 +51,7 @@ def joint_sample_from_datasets(n_samples: int, datasetA:Dataset, datasetB: Datas
         datasetB (Dataset): torch Dataset object
         balance_ratio (float): ratio of samples to sample from datasetA
         replace (bool, optional): Whether to sample with replacement. Defaults to True.
-clear
-s
+
     Returns:
         torch.tensor: sample from dataset.
         torch.tensor: mask of the samples, 1 if sample is from datasetA, 0 if sample is from datasetB
