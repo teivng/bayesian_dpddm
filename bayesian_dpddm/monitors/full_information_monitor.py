@@ -12,7 +12,7 @@ from .utils import temperature_scaling, sample_from_dataset, get_class_from_stri
 from .monitor import DPDDMMonitor
 
 
-class DPDDMFullInformationMoniter(DPDDMMonitor):
+class DPDDMFullInformationMonitor(DPDDMMonitor):
     """ Defines the Full information version of the DPDDM Moniter.
     
     Attributes:

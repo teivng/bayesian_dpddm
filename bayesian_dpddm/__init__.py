@@ -1,5 +1,5 @@
 from .models import ConvModel, MLPModel
-from .monitors import DPDDMBayesianMonitor, DPDDMFullInformationMoniter
+from .monitors import DPDDMBayesianMonitor, DPDDMFullInformationMonitor
 from ._metadata import *
 from importlib.metadata import version, PackageNotFoundError
 
