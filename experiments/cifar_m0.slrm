@@ -1,0 +1,26 @@
+#!/bin/bash
+#SBATCH --job-name=bdpddm_cifar10
+#SBATCH -c 16
+#SBATCH --qos=normal
+#SBATCH --partition=t4v1,t4v2,rtx6000,a40
+#SBATCH --mem=32G
+#SBATCH --gres=gpu:1
+#SBATCH --array=0-3  # 4 jobs
+#SBATCH --time=16:00:00
+#SBATCH --output=logs/slurm_normal_%A_%a.out
+#SBATCH --error=logs/slurm_normal_%A_%a.err
+#SBATCH --open-mode=append
+#SBATCH --signal=B:USR1@120
+
+source ~/.bashrc
+conda activate dpddm
+which python
+
+CONFIGS=("cifar10_best_50" "cifar10_best_100" "cifar10_best_200")
+SEED=$((1000 + SLURM_ARRAY_TASK_ID))
+CONFIG_INDEX=$((SLURM_ARRAY_TASK_ID % 3))
+CONFIG_NAME=${CONFIGS[$CONFIG_INDEX]}
+
+echo "Running config: $CONFIG_NAME with seed: $SEED on QoS: normal"
+
+python experiments/run.py --config-name=$CONFIG_NAME seed=$SEED
