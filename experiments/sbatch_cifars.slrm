@@ -11,13 +11,13 @@
 #SBATCH --signal=B:USR1@120
 
 # Dynamically determine QoS and time based on SLURM_ARRAY_TASK_ID
-if (( SLURM_ARRAY_TASK_ID < 4 )); then
+if (( SLURM_ARRAY_TASK_ID < 3 )); then
     QOS="normal"
     TIME="16:00:00"
-elif (( SLURM_ARRAY_TASK_ID < 12 )); then
+elif (( SLURM_ARRAY_TASK_ID < 11 )); then
     QOS="m"
     TIME="12:00:00"
-elif (( SLURM_ARRAY_TASK_ID < 24 )); then
+elif (( SLURM_ARRAY_TASK_ID < 23 )); then
     QOS="m2"
     TIME="8:00:00"
 else
