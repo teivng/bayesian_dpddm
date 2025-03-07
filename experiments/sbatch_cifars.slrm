@@ -1,16 +1,33 @@
 #!/bin/bash
 #SBATCH --job-name=bdpddm_cifar10
 #SBATCH -c 16
-#SBATCH --qos=normal
 #SBATCH --partition=t4v1,t4v2,rtx6000,a40
 #SBATCH --mem=32G
 #SBATCH --gres=gpu:1
 #SBATCH --array=0-29  # 30 runs
-#SBATCH --time=16:00:00
 #SBATCH --output=logs/slurm_%A_%a.out
 #SBATCH --error=logs/slurm_%A_%a.err
 #SBATCH --open-mode=append
 #SBATCH --signal=B:USR1@120
+
+# Dynamically determine QoS and time based on SLURM_ARRAY_TASK_ID
+if (( SLURM_ARRAY_TASK_ID < 4 )); then
+    QOS="normal"
+    TIME="16:00:00"
+elif (( SLURM_ARRAY_TASK_ID < 12 )); then
+    QOS="m"
+    TIME="12:00:00"
+elif (( SLURM_ARRAY_TASK_ID < 24 )); then
+    QOS="m2"
+    TIME="8:00:00"
+else
+    QOS="m3"
+    TIME="4:00:00"
+fi
+
+# Update job constraints
+#SBATCH --qos=$QOS
+#SBATCH --time=$TIME
 
 source ~/.bashrc
 conda activate dpddm
@@ -24,6 +41,6 @@ SEED=$((1000 + SLURM_ARRAY_TASK_ID))
 CONFIG_INDEX=$((SLURM_ARRAY_TASK_ID % 3))
 CONFIG_NAME=${CONFIGS[$CONFIG_INDEX]}
 
-echo "Running config: $CONFIG_NAME with seed: $SEED"
+echo "Running config: $CONFIG_NAME with seed: $SEED on QoS: $QOS with time: $TIME"
 
 python experiments/run.py --config-name=$CONFIG_NAME seed=$SEED
