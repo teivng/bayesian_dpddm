@@ -66,7 +66,15 @@ Edit this script per your allocation.
 
 ## Usage and Tutorials
 
-Coming soon.
+In short, training a ``DPDDMMonitor`` consists of a three steps.
+
+1. Train the base model of the monitor on I.I.D. training data
+2. With a held-out set of I.I.D. validation data, train the distribution of I.I.D. disagreement rates (Phi) of the monitor
+3. Deploy the base model and monitor by periodically running ``dpddm_test`` on batches of unsupervised deployment data 
+
+When ``dpddm_test`` returns ``True``, the monitor recognizes that the base model may severely underperform on the unsupervised deployment data. This is the cue for ML practitioners to inspect the problem further and consider further measures such as adapting and retraining. 
+
+For a full tutorial on how to deploy ``bayesian_dpddm`` to monitor a downstream task, consider running the guidebook ``tutorials/classification.ipynb`` where we train a ``DPDDMBayesianMonitor`` to monitor an induced deteriorating shift on the UCI Heart Disease dataset. 
 
 ## Citation
 

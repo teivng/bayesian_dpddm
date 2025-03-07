@@ -4,9 +4,10 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bayesian_dpddm"
-version = "1.0.3"
+version = "1.0.4"
 authors = [
     { name = "viet", email = "viet@cs.toronto.edu" },
+    {name = "sid", email = "sid.arya@mail.utoronto.ca"}
 ]
 description = "Implements Bayesian D-PDDM for Post-Deployment Deterioration Monitoring of ML models."
 readme = "README.md"

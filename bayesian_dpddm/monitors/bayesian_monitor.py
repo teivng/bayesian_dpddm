@@ -9,6 +9,20 @@ from ..models.base import DPDDMAbstractModel
 from ..configs import TrainConfig
 from .utils import temperature_scaling, sample_from_dataset, get_class_from_string
 from .monitor import DPDDMMonitor
+
+
+class TempDataset(torch.utils.data.Dataset):
+    ''' Temporary dataset to batch for data that does not fit on GPU '''
+    def __init__(self, X, y):
+        self.X = X
+        self.y = y
+        
+    def __len__(self):
+        return len(self.y)
+    
+    def __getitem__(self, idx):
+        return self.X[idx], self.y[idx]  
+
  
 class DPDDMBayesianMonitor(DPDDMMonitor):
     """Defines the Bayesian DPDDM Monitor (Algorithms 3 and 4).
@@ -96,6 +110,17 @@ class DPDDMBayesianMonitor(DPDDMMonitor):
             torch.tensor: pseudolabels labeled by self.model
         """
         self.model.eval()
+        
+        '''loader = torch.utils.data.DataLoader(TempDataset(X, torch.arange(0, len(X))), batch_size=2048)
+        y_hat_collection = []
+        with torch.no_grad():
+            for X, _ in loader:
+                X = X.to(self.device)
+                features = self.model.get_features(X)
+                ll_dist = self.model.out_layer.logit_predictive(features)
+                y_hat = torch.argmax(ll_dist.loc, 1)
+                y_hat_collection.append(y_hat)
+        return torch.cat(y_hat_collection, dim=0)'''
         X = X.to(self.device)
         with torch.no_grad():
             features = self.model.get_features(X)
@@ -117,17 +142,33 @@ class DPDDMBayesianMonitor(DPDDMMonitor):
             float: approximate maximum disagreement rate
         """
         self.model.eval()
+        '''loader = torch.utils.data.DataLoader(TempDataset(X, y), batch_size=2048)
+        maxes = [] 
         with torch.no_grad():
-            features = self.model.get_features(X)
-            ll_dist = self.model.out_layer.logit_predictive(features)
-            logits_samples = ll_dist.rsample(sample_shape=torch.Size([n_post_samples]))
+            for features, labels in loader:
+                features, labels = features.to(self.device), labels.to(self.device)
+                output = self.model.get_features(features)
+                ll_dist = self.model.out_layer.logit_predictive(output)
+                logits_samples = ll_dist.rsample(sample_shape=torch.Size([n_post_samples]))
             
-            # scale down with temperature
+                # scale down with temperature
+                logits_samples = temperature_scaling(logits_samples, temperature)
+                y_hat = torch.argmax(logits_samples, -1)
+                y_tile = torch.tile(labels, (n_post_samples, 1)).cuda()
+                dis_mat = (y_hat != y_tile)
+                dis_rate = dis_mat.sum(dim=-1)/len(y)
+                maxes.append(torch.max(dis_rate).item())
+        return max(maxes)'''
+        X, y = X.to(self.device), y.to(self.device)
+        with torch.no_grad():
+            output = self.model.get_features(X)
+            ll_dist = self.model.out_layer.logit_predictive(output)
+            logits_samples = ll_dist.rsample(sample_shape=torch.Size([n_post_samples]))
             logits_samples = temperature_scaling(logits_samples, temperature)
-            y_hat = torch.argmax(logits_samples, -1)
-            y_tile = torch.tile(y, (n_post_samples, 1)).cuda()
+            #y_hat = torch.argmax(logits_samples, -1)
+            dist = torch.distributions.Categorical(logits=logits_samples)
+            y_hat = dist.sample()
+            y_tile = torch.tile(y, (n_post_samples, 1)).to(self.device)
             dis_mat = (y_hat != y_tile)
             dis_rate = dis_mat.sum(dim=-1)/len(y)
-    
         return torch.max(dis_rate).item()
-            

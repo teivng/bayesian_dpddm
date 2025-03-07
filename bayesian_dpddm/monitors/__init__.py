@@ -1,1 +1,2 @@
 from .bayesian_monitor import DPDDMBayesianMonitor
+from .full_information_monitor import  DPDDMFullInformationMonitor
