@@ -18,7 +18,7 @@ parameters:
   model.reg_weight_factor:
     values: [1, 10, 50, 100]
   dpddm.data_sample_size:
-    values: [100]
+    values: [50]
   dpddm.temp:
     values: [1, 2, 5, 10]
 
