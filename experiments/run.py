@@ -19,13 +19,6 @@ device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
 from experiments.utils import get_datasets, get_configs
 
-
-# Seeding
-#RANDOM_SEED = 9927
-#np.random.seed(RANDOM_SEED)
-#torch.random.manual_seed(RANDOM_SEED)
-
-
 # base models
 base_models = {
     'cifar10': ConvModel,

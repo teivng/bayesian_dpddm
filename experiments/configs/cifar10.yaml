@@ -10,3 +10,4 @@ defaults:
   - override hydra/job_logging: disabled
   
 from_pretrained: False
+seed: 57
