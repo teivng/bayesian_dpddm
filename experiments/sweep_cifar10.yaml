@@ -2,25 +2,25 @@ project: bayesian_dpddm
 program: experiments/run.py
 method: bayes  
 metric:
-  name: fpr_id
-  goal: minimize
+  name: tpr
+  goal: maximize
 parameters:
   dataset:
     values: [cifar10]
   model.mid_channels:
-    values: [128, 256, 512, 1024]
+    values: [64, 128, 256, 512]
   model.kernel_size:
     values: [3, 5, 7]
   model.mid_layers:
-    values: [2, 3, 4]
+    values: [2, 4, 6]
   model.hidden_dim:
     values: [128, 256, 512]
   model.reg_weight_factor:
-    values: [1, 10, 100, 1000]
+    values: [1, 10, 50, 100]
   dpddm.data_sample_size:
     values: [100]
   dpddm.temp:
-    values: [1, 10, 100, 1000]
+    values: [1, 2, 5, 10]
 
 command: 
   - ${env}
