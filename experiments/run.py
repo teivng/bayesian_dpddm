@@ -42,6 +42,13 @@ def main(args:DictConfig):
     np.random.seed(RANDOM_SEED)
     torch.random.manual_seed(RANDOM_SEED)
     
+    print(args.dpddm.data_sample_size)
+    print(args.model.mid_channels)
+    
+    print("Final Config:\n", OmegaConf.to_yaml(args))
+    
+    exit()
+    
     # =========================================================
     # =============Print All Configurations====================
     # =========================================================

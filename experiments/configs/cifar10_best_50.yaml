@@ -1,5 +1,4 @@
 defaults:
-  - _self_
   - hydra: defaults
   - train: defaults
   - dataset: cifar10
@@ -8,10 +7,7 @@ defaults:
   - wandb_cfg: defaults
   - override hydra/hydra_logging: disabled
   - override hydra/job_logging: disabled
-  
-from_pretrained: False
-
-seed: 9927
+  - _self_
 
 model:
   hidden_dim: 128
@@ -24,3 +20,5 @@ dpddm:
   data_sample_size: 50
   temp: 100
 
+from_pretrained: False
+seed: 9927
