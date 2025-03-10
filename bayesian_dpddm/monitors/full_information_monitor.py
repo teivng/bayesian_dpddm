@@ -34,7 +34,7 @@ class DPDDMFullInformationMonitor(DPDDMMonitor):
         # Over-write the models final layer
         self.model.out_layer = torch.nn.Linear(self.model.cfg.mid_features, self.model.cfg.out_features)
         self.model.to(self.device)
-        self.rejection_loss_fn = FILoss()
+        self.rejection_loss_fn = FILoss(alpha=self.train_cfg.disagreement_alpha)
         self.loss_fn = torch.nn.CrossEntropyLoss()
         self.probs = torch.nn.Softmax()
 
@@ -131,14 +131,15 @@ class DPDDMFullInformationMonitor(DPDDMMonitor):
         Returns:
             float: approximate maximum disagreement rate
         """
-        disagreement_model = self.model
+        # disagreement_model = self.model
+        disagreement_model = copy.deepcopy(self.model)
         disagreement_model.train()
         disagreement_model.to(self.device)
 
         opt_cls = get_class_from_string(self.train_cfg.disagreement_optimizer)
         disagreement_optimizer =  opt_cls(
             disagreement_model.parameters(),
-            lr=self.train_cfg.disagreeement_lr,
+            lr=self.train_cfg.disagreement_lr,
             weight_decay=self.train_cfg.disagreement_wd,
         )
 

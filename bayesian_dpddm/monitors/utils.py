@@ -125,6 +125,7 @@ class FILoss(torch.nn.Module):
         
         if alpha is None:
             alpha = 1 / (1 + (~mask).float().sum())
+            # 1 / (1 + #negative samples (rejection))
 
         num_classes = logits.shape[1]
 

@@ -1,3 +1,10 @@
+disagreement_epochs: 50
+disagreement_optimizer: torch.optim.AdamW
+disagreement_wd: 0.0001
+disagreement_lr: 0.01
+disagreement_batch_size: 64
+disagreement_alpha: 10
+
 num_epochs: 50
 batch_size: 64
 lr: 0.001
@@ -6,8 +13,3 @@ optimizer: torch.optim.AdamW
 clip_val: 1
 val_freq: 1
 
-disagreement_epochs: 20
-disagreement_optimizer: torch.optim.AdamW
-disagreement_wd: 0.0001
-disagreeement_lr: 0.001
-disagreement_batch_size: 64
