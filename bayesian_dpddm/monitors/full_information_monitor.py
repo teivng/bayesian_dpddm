@@ -135,11 +135,11 @@ class DPDDMFullInformationMonitor(DPDDMMonitor):
         disagreement_model.train()
         disagreement_model.to(self.device)
 
-        opt_cls = get_class_from_string(self.train_cfg.optimizer)
+        opt_cls = get_class_from_string(self.train_cfg.disagreement_optimizer)
         disagreement_optimizer =  opt_cls(
             disagreement_model.parameters(),
-            lr=self.train_cfg.lr,
-            weight_decay=self.train_cfg.wd,
+            lr=self.train_cfg.disagreeement_lr,
+            weight_decay=self.train_cfg.disagreement_wd,
         )
 
         # Create a datalaoder with the 50 ood samples and the train dataset in order to learn to agree with train and disagree with ood.
@@ -148,7 +148,7 @@ class DPDDMFullInformationMonitor(DPDDMMonitor):
             MaskedDataset(TensorDataset(X, y.cpu()), mask=False)
         )
 
-        rejection_loader = DataLoader(joint_dataset, batch_size=32, shuffle=True)
+        rejection_loader = DataLoader(joint_dataset, batch_size=self.train_cfg.disagreement_batch_size, shuffle=True)
 
         # TODO: Implement the fine tuning of disagreement_mode
 
@@ -160,7 +160,7 @@ class DPDDMFullInformationMonitor(DPDDMMonitor):
 
         disagreement_model.to(self.device)
         with torch.set_grad_enabled(True):
-            for epoch in (range(10)):
+            for epoch in (range(self.train_cfg.disagreement_epochs)):
                 disagreement_model.train()
                 for train_step, (features, labels, mask) in enumerate(rejection_loader):
                     disagreement_optimizer.zero_grad()
