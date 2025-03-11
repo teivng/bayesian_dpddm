@@ -1,9 +1,9 @@
-disagreement_epochs: 50
+disagreement_epochs: 5
 disagreement_optimizer: torch.optim.AdamW
 disagreement_wd: 0.0001
 disagreement_lr: 0.01
 disagreement_batch_size: 64
-disagreement_alpha: 10
+disagreement_alpha: 0.8
 
 num_epochs: 50
 batch_size: 64

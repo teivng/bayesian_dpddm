@@ -106,7 +106,7 @@ class FILoss(torch.nn.Module):
 
     def forward(self, logits, labels, mask):
         return self.full_info_loss(logits, labels,
-                        mask)
+                        mask, alpha=self.alpha, weight=self.weight)
     
     def full_info_loss(self, logits: torch.Tensor, labels: torch.Tensor, mask: torch.Tensor, alpha: Optional[float] = None,
              weight=None) -> torch.Tensor:
@@ -118,6 +118,8 @@ class FILoss(torch.nn.Module):
         :param weight:  (torch.Tensor) weight for each sample_data, default=None do not apply weighting
         :return: (tensor, float) the disagreement cross entropy loss
         """
+        alpha=self.alpha
+        
 
         if mask.all():
             # if all labels are positive, then use the standard cross entropy loss
