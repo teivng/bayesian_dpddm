@@ -9,9 +9,10 @@ defaults:
   - override hydra/job_logging: disabled
   - _self_
 
+monitor_type: bayesian
 from_pretrained: False
-
 seed: 9927
+self_log: True
 
 model:
   hidden_dim: 128

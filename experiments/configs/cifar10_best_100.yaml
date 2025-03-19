@@ -21,5 +21,6 @@ dpddm:
   temp: 1000
 
 from_pretrained: False
-
+monitor_type: bayesian
 seed: 9927
+self_log: True

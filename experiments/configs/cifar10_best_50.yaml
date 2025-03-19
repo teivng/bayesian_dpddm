@@ -22,3 +22,5 @@ dpddm:
 
 from_pretrained: False
 seed: 9927
+monitor_type: bayesian
+self_log: True

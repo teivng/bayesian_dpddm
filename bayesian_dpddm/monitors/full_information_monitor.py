@@ -4,12 +4,14 @@ import numpy as np
 import torch
 import multiprocessing
 from torch.utils.data import DataLoader, Dataset, TensorDataset
+import torch.nn.functional as F
 import copy
 
 from ..models.base import DPDDMAbstractModel
 from ..configs import TrainConfig
 from .utils import temperature_scaling, sample_from_dataset, get_class_from_string, FILoss, joint_sample_from_datasets, MaskedDataset
 from .monitor import DPDDMMonitor
+from ..models import ConvModel, MLPModel
 
 
 class DPDDMFullInformationMonitor(DPDDMMonitor):
@@ -32,7 +34,8 @@ class DPDDMFullInformationMonitor(DPDDMMonitor):
         self.full_network_ft = full_network_ft
         
         # Over-write the models final layer
-        self.model.out_layer = torch.nn.Linear(self.model.cfg.mid_features, self.model.cfg.out_features)
+        hid_dim = self.model.cfg.mid_features if isinstance(self.model, MLPModel) else self.model.cfg.hidden_dim
+        self.model.out_layer = torch.nn.Linear(hid_dim, self.model.cfg.out_features)
         self.model.to(self.device)
         self.rejection_loss_fn = FILoss(alpha=self.train_cfg.disagreement_alpha)
         self.loss_fn = torch.nn.CrossEntropyLoss()
@@ -60,7 +63,7 @@ class DPDDMFullInformationMonitor(DPDDMMonitor):
                 out = self.model(features)
                 loss = self.loss_fn(out, labels.to(torch.long))
                 with torch.no_grad():
-                    probs = self.probs(out)
+                    probs = F.softmax(out, dim=-1)
                     acc = self.eval_acc(probs, labels).item()
                 running_loss.append(loss.item())
                 running_acc.append(acc)
@@ -79,7 +82,7 @@ class DPDDMFullInformationMonitor(DPDDMMonitor):
                         out = self.model(features)
                         loss = self.loss_fn(out, labels.to(torch.long))
                         with torch.no_grad():
-                            probs = self.probs(out)
+                            probs = F.softmax(out, dim=-1)
                             acc = self.eval_acc(probs, labels).item()
 
                         running_val_loss.append(loss.item())

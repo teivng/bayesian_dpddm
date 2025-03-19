@@ -10,7 +10,7 @@ parentdir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pard
 sys.path.append(parentdir)
 import fcntl
 
-from bayesian_dpddm import ConvModel, DPDDMBayesianMonitor, MLPModel
+from bayesian_dpddm import ConvModel, DPDDMBayesianMonitor, MLPModel, DPDDMFullInformationMonitor
 import torch
 import numpy as np
 
@@ -23,6 +23,11 @@ from experiments.utils import get_datasets, get_configs
 base_models = {
     'cifar10': ConvModel,
     'uci': MLPModel,
+}
+
+monitors = {
+    'bayesian': DPDDMBayesianMonitor,
+    'fi': DPDDMFullInformationMonitor
 }
 
 @hydra.main(config_path='configs/', config_name='defaults', version_base='1.2')
@@ -62,7 +67,7 @@ def main(args:DictConfig):
     
     ''' Build model and monitor '''
     base_model = base_models[args.dataset.name](model_config, train_size=len(dataset['train']))
-    monitor = DPDDMBayesianMonitor(
+    monitor = monitors[args.monitor_type](
         model=base_model,
         trainset=dataset['train'],
         valset=dataset['valid'],
@@ -126,6 +131,10 @@ def main(args:DictConfig):
         stats[k] = rate
         dis_rates[k] = (np.mean(max_dis_rates), np.std(max_dis_rates))
 
+    # =========================================================
+    # ===================Logging Results=======================
+    # =========================================================
+    
     ''' wandb log statistics '''
     wandb.log({
         'fpr_train': stats['dpddm_train'],
@@ -138,31 +147,33 @@ def main(args:DictConfig):
         'dr_ood': dis_rates['dpddm_ood']
     })
     
-    ''' Self-logging initialization '''
-    logger = {}
-    log_dir = 'results/'
-    os.makedirs(log_dir, exist_ok=True)
-    
-    logger['seed'] = args.seed
-    logger['data_sample_size'] = args.dpddm.data_sample_size
-    
-    ''' self-log statistics '''
-    logger['fpr_train'] = stats['dpddm_train']
-    logger['fpr_id'] = stats['dpddm_id']
-    logger['tpr'] = stats['dpddm_ood']
-    
-    ''' write self-log to file '''
-    csv_path = os.path.join(log_dir, f'results_cifar10_{args.dpddm.data_sample_size}.csv')
-    csv_exists = os.path.isfile(csv_path)
-    
-    with open(csv_path, 'a') as f:
-        fcntl.flock(f, fcntl.LOCK_EX)
-        df = pd.DataFrame([logger])
-        if not csv_exists:
-            df.to_csv(f, index=False)
-        else:
-            df.to_csv(f, mode='a', header=False, index=False)
-        fcntl.flock(f, fcntl.LOCK_UN)
+    if args.self_log:
+        ''' Self-logging initialization '''
+        logger = {}
+        log_dir = 'results/'
+        os.makedirs(log_dir, exist_ok=True)
+        
+        logger['seed'] = args.seed
+        logger['data_sample_size'] = args.dpddm.data_sample_size
+        
+        ''' self-log statistics '''
+        logger['fpr_train'] = stats['dpddm_train']
+        logger['fpr_id'] = stats['dpddm_id']
+        logger['tpr'] = stats['dpddm_ood']
+        
+        ''' write self-log to file '''
+        csv_path = os.path.join(log_dir, f'results_{args.dataset.name}_{args.dpddm.data_sample_size}.csv')
+        csv_exists = os.path.isfile(csv_path)
+        
+        with open(csv_path, 'a') as f:
+            fcntl.flock(f, fcntl.LOCK_EX)
+            df = pd.DataFrame([logger])
+            if not csv_exists:
+                df.to_csv(f, index=False)
+            else:
+                df.to_csv(f, mode='a', header=False, index=False)
+            fcntl.flock(f, fcntl.LOCK_UN)
+            
     return 0
 
 
