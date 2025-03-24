@@ -1,0 +1,31 @@
+project: bayesian_dpddm
+program: experiments/run.py
+method: bayes
+metric:
+  name: tpr
+  goal: maximize
+parameters:
+  dataset:
+    values: [synthetic]
+  model.mid_features:
+    values: [16, 32, 64, 128]
+  model.mid_layers:
+    values: [1, 2, 3, 4, 6]
+  model.reg_weight_factor:
+    values: [0.1, 1, 10, 100]
+  model.prior_scale:
+    values: [0.1, 1, 10, 100]
+  model.wishart_scale:
+    values: [0.1, 1, 10, 100]
+  dpddm.temp:
+    values: [1, 2, 3, 5]
+  dpddm.data_sample_size:
+    values: [200]
+
+command: 
+  - ${env}
+  - python 
+  - ${program}
+  - --config-name=synthetic
+  - ${args_no_hyphens}
+  

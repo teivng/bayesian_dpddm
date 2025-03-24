@@ -23,6 +23,7 @@ from experiments.utils import get_datasets, get_configs
 base_models = {
     'cifar10': ConvModel,
     'uci': MLPModel,
+    'synthetic': MLPModel,
 }
 
 monitors = {

@@ -1,0 +1,9 @@
+name: synthetic
+num_classes: 2
+n: 10000
+m: 4000
+var: 1.0
+d: 2
+id_mean: 3.14
+ood_mean: 4.14
+gap: 1.0

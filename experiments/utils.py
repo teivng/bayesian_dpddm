@@ -5,7 +5,7 @@ import torchvision
 import inspect
 from bayesian_dpddm.configs import TrainConfig
 from bayesian_dpddm.configs.model_configs import ConvModelConfig, MLPModelConfig
-from data import get_cifar10_datasets, get_uci_datasets
+from data import get_cifar10_datasets, get_uci_datasets, get_synthetic_datasets
 from omegaconf import DictConfig, OmegaConf
 
 
@@ -50,6 +50,7 @@ def get_configs(args:DictConfig):
     Configs = {
         'cifar10': ConvModelConfig,
         'uci': MLPModelConfig,
+        'synthetic': MLPModelConfig
     }
     model_args = OmegaConf.to_container(args.model)
     train_args = OmegaConf.to_container(args.train)
@@ -76,6 +77,7 @@ def get_datasets(args:DictConfig):
     """
     dataset_dict = {}
     name = args.dataset.name
+    
     if name == 'cifar10':
         train, val, id, ood = get_cifar10_datasets(args, download=True)
         dataset_dict['train'] = train
@@ -91,6 +93,9 @@ def get_datasets(args:DictConfig):
         dataset_dict['dpddm_train'] = uci_dict['val']
         dataset_dict['dpddm_id'] = uci_dict['iid_test']
         dataset_dict['dpddm_ood'] = uci_dict['ood_test']
+    
+    elif name == 'synthetic':
+        dataset_dict = get_synthetic_datasets(args)
         
     else: 
         raise NameError('Not a dataset with a known data pipeline implementation.')
