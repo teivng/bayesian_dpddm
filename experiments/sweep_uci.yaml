@@ -2,7 +2,7 @@ project: bayesian_dpddm
 program: experiments/run.py
 method: grid
 metric:
-  name: fpr_id
+  name: tpr
   goal: minimize
 parameters:
   dataset:

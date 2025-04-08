@@ -5,7 +5,7 @@ disagreement_lr: 0.01
 disagreement_batch_size: 64
 disagreement_alpha: 0.8
 
-num_epochs: 30
+num_epochs: 50
 batch_size: 64
 lr: 0.001
 wd: 0.0001

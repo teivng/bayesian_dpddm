@@ -4,6 +4,8 @@ import numpy as np
 import torch
 import multiprocessing
 from torch.utils.data import DataLoader, Dataset, TensorDataset
+from torch.utils.data import ConcatDataset
+
 import torch.nn.functional as F
 import copy
 
@@ -147,13 +149,18 @@ class DPDDMFullInformationMonitor(DPDDMMonitor):
         )
 
         # Create a datalaoder with the 50 ood samples and the train dataset in order to learn to agree with train and disagree with ood.
-        joint_dataset = (
+        '''joint_dataset = (
             MaskedDataset(self.trainset, mask=True) + 
             MaskedDataset(TensorDataset(X, y.cpu()), mask=False)
-        )
+        )'''
 
-        rejection_loader = DataLoader(joint_dataset, batch_size=self.train_cfg.disagreement_batch_size, shuffle=True)
-
+        joint_dataset = ConcatDataset([
+            MaskedDataset(self.trainset, mask=True),
+            MaskedDataset(TensorDataset(X, y.cpu()), mask=False)
+        ])
+        
+        #rejection_loader = DataLoader(joint_dataset, batch_size=self.train_cfg.disagreement_batch_size, shuffle=True)
+        rejection_loader = DataLoader(joint_dataset, batch_size=128, shuffle=True)
         # TODO: Implement the fine tuning of disagreement_mode
 
         # if not self.full_network_ft:
@@ -163,6 +170,12 @@ class DPDDMFullInformationMonitor(DPDDMMonitor):
         X, y = X.to(self.device), y.to(self.device)
 
         disagreement_model.to(self.device)
+        tloader = DataLoader(TensorDataset(X, y.cpu()), batch_size=64)
+        print(rejection_loader.__len__())
+        for m in rejection_loader:
+            print(features.size(), labels.size())
+        exit()
+        
         with torch.set_grad_enabled(True):
             for epoch in (range(self.train_cfg.disagreement_epochs)):
                 disagreement_model.train()

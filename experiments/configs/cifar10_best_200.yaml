@@ -15,12 +15,12 @@ seed: 9927
 self_log: True
 
 model:
-  hidden_dim: 128
+  hidden_dim: 256
   mid_layers: 4
-  kernel_size: 5
-  mid_channels: 512
+  kernel_size: 7
+  mid_channels: 128
   reg_weight_factor: 100
 
 dpddm:
   data_sample_size: 200
-  temp: 1000
+  temp: 2
