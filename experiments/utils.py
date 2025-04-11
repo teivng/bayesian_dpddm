@@ -73,7 +73,7 @@ def get_datasets(args:DictConfig):
                 - valid         (used ot validate base model)
                 - dpddm_train   (used to train dpddm's Phi)
                 - dpddm_id      (used to validate FPR)
-                - dpddm_ood     (used to validate TPR)
+                #- dpddm_ood     (used to validate TPR)
     """
     dataset_dict = {}
     name = args.dataset.name
