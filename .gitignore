@@ -12,4 +12,6 @@ outputs/
 # ignore big data, small data can be uploaded
 data/cifar10_data/
 data/camelyon17_v1.0/
+experiments/data/
 .DS_Store
+.vscode/
