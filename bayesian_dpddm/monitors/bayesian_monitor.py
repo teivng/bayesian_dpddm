@@ -53,7 +53,8 @@ class DPDDMBayesianMonitor(DPDDMMonitor):
             self.model.train()
             running_loss = []
             running_acc = []
-            for train_step, (features, labels) in enumerate(self.trainloader):
+            for train_step, batch in enumerate(tqdm(self.trainloader, leave=False)):
+                features, labels, *_ = batch
                 self.optimizer.zero_grad()
                 features, labels = features.to(self.device), labels.to(self.device)
                 out = self.model(features)
@@ -71,7 +72,8 @@ class DPDDMBayesianMonitor(DPDDMMonitor):
                 running_val_acc = []
                 with torch.no_grad():
                     self.model.eval()
-                    for test_step, (features, labels) in enumerate(self.valloader):
+                    for test_step, batch in enumerate(self.valloader):
+                        features, labels, *metadata = batch
                         features, labels = features.to(self.device), labels.to(self.device)
 
                         out = self.model(features)

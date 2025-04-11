@@ -1,1 +1,1 @@
-from .data_utils import get_cifar10_datasets, get_uci_datasets, get_synthetic_datasets
+from .data_utils import get_cifar10_datasets, get_uci_datasets, get_synthetic_datasets, get_camelyon17_datasets

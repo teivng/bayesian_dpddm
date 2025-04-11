@@ -4,8 +4,10 @@ from abc import ABC, abstractmethod
 import torch
 import torchvision
 from torchvision.transforms import v2
+from torchvision import transforms
 from omegaconf import DictConfig
 from torch.utils.data import Dataset, Subset
+from wilds.datasets.camelyon17_dataset import Camelyon17Dataset
 
 
 # ================================================
@@ -41,14 +43,14 @@ class TensorDataset(Dataset, ABC):
 
 
 """ torchvision transforms """
-train_transforms = v2.Compose([
+cifar10_train_transforms = v2.Compose([
     v2.RandomHorizontalFlip(p=0.5),
     v2.RandomCrop(size=[32,32], padding=4),
     v2.ToImage(),
     v2.ToDtype(torch.float32, scale=True),
     v2.Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.247, 0.243, 0.261]),
 ])
-test_transforms = v2.Compose([
+cifar10_test_transforms = v2.Compose([
     v2.ToImage(),
     v2.ToDtype(torch.float32, scale=True),
     v2.Normalize(mean=[0.4914, 0.4822, 0.4465], std=[0.247, 0.243, 0.261]),
@@ -73,7 +75,7 @@ class CIFAR101Dataset(TensorDataset):
     \tSplit: OOD
     \tTestTransform
     \t{}
-    """.format(self.__len__(), test_transforms)
+    """.format(self.__len__(), cifar10_test_transforms)
 
 
 def get_cifar10_datasets(args:DictConfig, download=True):
@@ -93,7 +95,7 @@ def get_cifar10_datasets(args:DictConfig, download=True):
     # Loads the cifar-10 test set
     cifar10test = torchvision.datasets.CIFAR10(root=args.dataset.data_dir, 
                                                train=False, 
-                                               transform=test_transforms, 
+                                               transform=cifar10_test_transforms, 
                                                download=download)
     
     # make the cifar-10 train and validation sets
@@ -107,7 +109,7 @@ def get_cifar10_datasets(args:DictConfig, download=True):
         dataset=torchvision.datasets.CIFAR10(
             root=args.dataset.data_dir,
             train=True,
-            transform=train_transforms,
+            transform=cifar10_train_transforms,
             download=True
         ),
         indices=cifar10train.indices
@@ -116,7 +118,7 @@ def get_cifar10_datasets(args:DictConfig, download=True):
         dataset=torchvision.datasets.CIFAR10(
             root=args.dataset.data_dir,
             train=True,
-            transform=test_transforms,
+            transform=cifar10_test_transforms,
             download=True
         ),
         indices=cifar10val.indices
@@ -130,10 +132,61 @@ def get_cifar10_datasets(args:DictConfig, download=True):
     
     transformed101data = torch.zeros(size=(len(ood_data), 3, 32, 32))
     for idx in range(len(ood_data)):
-        transformed101data[idx] = test_transforms(ood_data[idx])
+        transformed101data[idx] = cifar10_test_transforms(ood_data[idx])
     transformed101labels = torch.as_tensor(ood_labels, dtype=torch.long)
     cifar101 = CIFAR101Dataset(transformed101data, transformed101labels)
     return cifar10train, cifar10val, cifar10test, cifar101
+
+# ================================================
+# ============Camelyon17 Utilities================
+# ================================================
+
+
+""" torchvision transforms """
+camelyon17_train_transform = transforms.Compose([
+    #transforms.Resize((224, 224)),
+    transforms.RandomHorizontalFlip(p=0.5),
+    transforms.RandomVerticalFlip(p=0.5),
+    transforms.RandomRotation(degrees=90),
+    #transforms.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1, hue=0.05),
+    transforms.RandomAffine(degrees=0, translate=(0.1, 0.1)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
+
+camelyon17_val_transform = transforms.Compose([
+    #transforms.Resize((224, 224)),
+    transforms.ToTensor(),
+    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+])
+
+
+def get_camelyon17_datasets(args:DictConfig):
+    """Returns WILDS Camelyon17 Dataset objects
+
+
+    Returns:
+        dict: contains the WILDS dataset splits already configured for Bayesian D-PDDM.
+    """
+    os.makedirs(args.dataset.data_dir, exist_ok=True)
+    # Loads the cifar-10 test set
+    dataset = Camelyon17Dataset(root_dir=args.dataset.data_dir, download=args.dataset.download)
+    splits = {
+        'train': 'train',
+        'valid': 'val',
+        'dpddm_train': 'id_val',
+        'dpddm_id': 'val',
+        'dpddm_ood': 'test'
+    }
+    dataset_dict = {}
+    for split in splits.keys():
+        ds = dataset.get_subset(splits[split], frac=args.dataset.frac)
+        if split == 'train':
+            ds.transform = camelyon17_train_transform
+        else:
+            ds.transform = camelyon17_val_transform
+        dataset_dict[split] = ds
+    return dataset_dict
 
 
 # ================================================
