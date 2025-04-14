@@ -8,7 +8,10 @@ from torchvision import transforms
 from omegaconf import DictConfig
 from torch.utils.data import Dataset, Subset
 from wilds.datasets.camelyon17_dataset import Camelyon17Dataset
+from torch.utils.data import Dataset
+from PIL import Image
 
+from tqdm.auto import tqdm
 
 # ================================================
 # ===========General Data Utilities===============
@@ -142,22 +145,45 @@ def get_cifar10_datasets(args:DictConfig, download=True):
 # ================================================
 
 
+class InMemoryCamelyonSubset(Dataset):
+    def __init__(self, wilds_subset, transform=None):
+        self.transform = transform
+        self._preload(wilds_subset)
+
+    def _preload(self, wilds_subset):
+        print(f"Preloading {len(wilds_subset)} samples into memory...")
+        self.data = []
+        for idx in tqdm(range(len(wilds_subset))):
+            x, y, metadata = wilds_subset[idx]  # returns (image, label, metadata)
+            self.data.append((x, y, metadata))
+        print("Preloading complete.")
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, idx):
+        x, y, metadata = self.data[idx]
+        if self.transform:
+            x = self.transform(x)
+        return x, y, metadata
+
+
 """ torchvision transforms """
 camelyon17_train_transform = transforms.Compose([
-    #transforms.Resize((224, 224)),
+    transforms.Resize((224, 224)),
     transforms.RandomHorizontalFlip(p=0.5),
     transforms.RandomVerticalFlip(p=0.5),
     transforms.RandomRotation(degrees=90),
     #transforms.ColorJitter(brightness=0.1, contrast=0.1, saturation=0.1, hue=0.05),
-    transforms.RandomAffine(degrees=0, translate=(0.1, 0.1)),
+    #transforms.RandomAffine(degrees=0, translate=(0.1, 0.1)),
     transforms.ToTensor(),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    #transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
 camelyon17_val_transform = transforms.Compose([
-    #transforms.Resize((224, 224)),
+    transforms.Resize((224, 224)),
     transforms.ToTensor(),
-    transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
+    #transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])
 ])
 
 
@@ -169,13 +195,12 @@ def get_camelyon17_datasets(args:DictConfig):
         dict: contains the WILDS dataset splits already configured for Bayesian D-PDDM.
     """
     os.makedirs(args.dataset.data_dir, exist_ok=True)
-    # Loads the cifar-10 test set
     dataset = Camelyon17Dataset(root_dir=args.dataset.data_dir, download=args.dataset.download)
     splits = {
         'train': 'train',
         'valid': 'val',
-        'dpddm_train': 'id_val',
-        'dpddm_id': 'val',
+        'dpddm_train': 'val',
+        'dpddm_id': 'id_val',
         'dpddm_ood': 'test'
     }
     dataset_dict = {}
@@ -185,6 +210,7 @@ def get_camelyon17_datasets(args:DictConfig):
             ds.transform = camelyon17_train_transform
         else:
             ds.transform = camelyon17_val_transform
+        #in_memory_ds = InMemoryCamelyonSubset(ds, camelyon17_val_transform)
         dataset_dict[split] = ds
     return dataset_dict
 

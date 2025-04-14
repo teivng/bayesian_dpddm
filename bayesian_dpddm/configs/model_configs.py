@@ -41,3 +41,11 @@ class MLPModelConfig(ModelConfig):
     mid_layers: int
     dropout: float
     return_ood: bool = False
+    
+@dataclass 
+class ResNetModelConfig(ModelConfig):
+    resnet_type: str
+    hidden_dim: int
+    resnet_pretrained: bool = False
+    freeze_features: bool = False
+    return_ood: bool = False

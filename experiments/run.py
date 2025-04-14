@@ -12,6 +12,7 @@ import fcntl
 
 from bayesian_dpddm import ConvModel, DPDDMBayesianMonitor, MLPModel, DPDDMFullInformationMonitor, ResNetModel
 import torch
+import torch.nn as nn
 import numpy as np
 
 torch.backends.cudnn.benchmark = True
@@ -32,7 +33,7 @@ monitors = {
     'fi': DPDDMFullInformationMonitor
 }
 
-@hydra.main(config_path='configs/', config_name='defaults', version_base='1.2')
+@hydra.main(config_path='configs/', config_name='camelyon17', version_base='1.2')
 def main(args:DictConfig):
     # =========================================================
     # ========================Seeding==========================

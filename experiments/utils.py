@@ -4,7 +4,7 @@ from torchvision.transforms import v2
 import torchvision
 import inspect
 from bayesian_dpddm.configs import TrainConfig
-from bayesian_dpddm.configs.model_configs import ConvModelConfig, MLPModelConfig
+from bayesian_dpddm.configs import ConvModelConfig, MLPModelConfig, ResNetModelConfig
 from data import get_cifar10_datasets, get_uci_datasets, get_synthetic_datasets, get_camelyon17_datasets
 from omegaconf import DictConfig, OmegaConf
 
@@ -51,7 +51,7 @@ def get_configs(args:DictConfig):
         'cifar10': ConvModelConfig,
         'uci': MLPModelConfig,
         'synthetic': MLPModelConfig,
-        'camelyon17': ConvModelConfig
+        'camelyon17': ResNetModelConfig
     }
     model_args = OmegaConf.to_container(args.model)
     train_args = OmegaConf.to_container(args.train)

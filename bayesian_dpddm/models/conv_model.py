@@ -1,6 +1,5 @@
 import torch.nn as nn
 import torch.nn.functional as F
-from torchvision.models import resnet18, resnet34
 import vbll
 from .base import DPDDMAbstractModel
 from ..configs import ModelConfig

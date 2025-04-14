@@ -6,14 +6,26 @@ from .base import DPDDMAbstractModel
 from ..configs import ModelConfig
 
 
+resnet_dict = {
+    'resnet18': (models.resnet18, models.ResNet18_Weights.DEFAULT, 512),
+    'resnet34': (models.resnet34, models.ResNet34_Weights.DEFAULT, 512),
+    'resnet50': (models.resnet50, models.ResNet50_Weights.DEFAULT, 2048),
+    'resnet101': (models.resnet101, models.ResNet101_Weights.DEFAULT, 2048),
+    'resnet152': (models.resnet152, models.ResNet152_Weights.DEFAULT, 2048),
+}
+
 class ResNetModel(DPDDMAbstractModel):
     """ DPDDM implementation with ResNet features. """
     def __init__(self, cfg:ModelConfig, train_size:int):
         super(ResNetModel, self).__init__()
-        self.features = models.resnet50(models.ResNet50_Weights.DEFAULT)
-        for param in self.features.parameters():
-            param.requires_grad = False
-        self.features.fc = nn.Linear(2048, 1000)
+        resnet_fn, resnet_weights, resnet_last_dim = resnet_dict[cfg.resnet_type]
+        weights = resnet_weights if cfg.resnet_pretrained else None
+        self.features = resnet_fn(weights=weights)
+        if cfg.freeze_features:
+            for param in self.features.parameters():
+                param.requires_grad = False
+                
+        self.features.fc = nn.Linear(resnet_last_dim, cfg.hidden_dim)
         self.features.fc.requires_grad = True
         
         self.out_layer = vbll.DiscClassification(cfg.hidden_dim, 
