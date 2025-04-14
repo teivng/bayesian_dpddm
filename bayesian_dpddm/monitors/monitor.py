@@ -57,8 +57,8 @@ class DPDDMMonitor(ABC):
             weight_decay=train_cfg.wd,
         )
         
-        self.trainloader = DataLoader(self.trainset, batch_size=train_cfg.batch_size, shuffle=True, num_workers=4)
-        self.valloader = DataLoader(self.valset, batch_size=train_cfg.batch_size, shuffle=True, num_workers=4)
+        self.trainloader = DataLoader(self.trainset, batch_size=train_cfg.batch_size, shuffle=True, num_workers=train_cfg.num_workers, pin_memory=True)
+        self.valloader = DataLoader(self.valset, batch_size=train_cfg.batch_size, shuffle=True, num_workers=train_cfg.num_workers, pin_memory=True)
 
         self.output_metrics = {
             'train_loss': [],

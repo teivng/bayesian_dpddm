@@ -210,7 +210,7 @@ def get_camelyon17_datasets(args:DictConfig):
             ds.transform = camelyon17_train_transform
         else:
             ds.transform = camelyon17_val_transform
-        #in_memory_ds = InMemoryCamelyonSubset(ds, camelyon17_val_transform)
+        #in_memory_ds = InMemoryCamelyonSubset(ds, camelyon17_train_transform if split=='train' else camelyon17_val_transform)
         dataset_dict[split] = ds
     return dataset_dict
 
