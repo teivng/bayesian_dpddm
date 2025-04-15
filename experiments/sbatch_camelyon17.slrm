@@ -9,8 +9,8 @@
 #SBATCH --gres=gpu:1
 #SBATCH --time="unlimited"
 #SBATCH --open-mode=append
-#SBATCH --output=logs/slurm.out
-#SBATCH --error=logs/slurm.err
+#SBATCH --output=logs/slurm_%j.out
+#SBATCH --error=logs/slurm_%j.err
 
 cd /voyager/projects/viet/bayesian_dpddm
 source /pkgs/anaconda3/etc/profile.d/conda.sh
