@@ -17,6 +17,8 @@ class TrainConfig:
     lr: float
     wd: float
     optimizer: str # string should resolve to a torch.optim.Optimizer object
+    num_workers: int
+    pin_memory: bool
     clip_val: float = 1
     val_freq: int = 1
     

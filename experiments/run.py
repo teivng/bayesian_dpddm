@@ -10,8 +10,10 @@ parentdir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pard
 sys.path.append(parentdir)
 import fcntl
 
-from bayesian_dpddm import ConvModel, DPDDMBayesianMonitor, MLPModel, DPDDMFullInformationMonitor
+from bayesian_dpddm import ConvModel, DPDDMBayesianMonitor, MLPModel, DPDDMFullInformationMonitor, ResNetModel
 import torch
+import torch.nn as nn
+#import torch.multiprocessing as mp
 import numpy as np
 
 torch.backends.cudnn.benchmark = True
@@ -24,6 +26,7 @@ base_models = {
     'cifar10': ConvModel,
     'uci': MLPModel,
     'synthetic': MLPModel,
+    'camelyon17': ResNetModel
 }
 
 monitors = {
@@ -31,7 +34,7 @@ monitors = {
     'fi': DPDDMFullInformationMonitor
 }
 
-@hydra.main(config_path='configs/', config_name='defaults', version_base='1.2')
+@hydra.main(config_path='configs/', config_name='camelyon17', version_base='1.2')
 def main(args:DictConfig):
     # =========================================================
     # ========================Seeding==========================
@@ -87,7 +90,13 @@ def main(args:DictConfig):
     if args.from_pretrained:
         base_model.load_state_dict(torch.load(os.path.join('saved_weights', f'{args.dataset.name}.pth')))
     else:
-        monitor.train_model(tqdm_enabled=True)
+        # make ood testloader
+        ood_testloader = torch.utils.data.DataLoader(dataset['dpddm_ood'],
+                                                     batch_size=train_config.batch_size,
+                                                     shuffle=False,
+                                                     num_workers=train_config.num_workers,
+                                                     pin_memory=train_config.pin_memory)
+        monitor.train_model(tqdm_enabled=True, testloader=ood_testloader)
         os.makedirs('saved_weights', exist_ok=True)
         torch.save(monitor.model.state_dict(), os.path.join('saved_weights', f'{args.dataset.name}.pth'))
     
@@ -179,4 +188,5 @@ def main(args:DictConfig):
 
 
 if __name__ == '__main__':
+    #mp.set_start_method('spawn', force=True)
     main()

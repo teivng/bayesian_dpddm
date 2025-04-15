@@ -1,0 +1,18 @@
+#!/bin/bash 
+#SBATCH --job-name="bdpddm_c17sweep"
+#SBATCH -A rahul
+#SBATCH -q ml
+#SBATCH -p ml
+#SBATCH -c 10
+#SBTCH -w overture,voyager,rosetta
+#SBATCH --mem=32G
+#SBATCH --gres=gpu:1
+#SBATCH --time="unlimited"
+#SBATCH --open-mode=append
+#SBATCH --output=logs/slurm.out
+#SBATCH --error=logs/slurm.err
+
+cd /voyager/projects/viet/bayesian_dpddm
+source /pkgs/anaconda3/etc/profile.d/conda.sh
+conda activate dpddm_tmp
+wandb agent opent03-team/wilds_dpddm/31mzvigh
