@@ -64,7 +64,9 @@ def main(args:DictConfig):
                      )
     
     run.config.update({'GPU': torch.cuda.get_device_name()})
+    
     print('GPU: ', torch.cuda.get_device_name())
+    
     ''' Get datasets '''
     dataset = get_datasets(args) 
     
