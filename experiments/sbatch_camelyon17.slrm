@@ -1,5 +1,5 @@
 #!/bin/bash 
-#SBATCH --job-name="bdpddm_c17sweep"
+#SBATCH --job-name="c17sweep"
 #SBATCH -A rahul
 #SBATCH -q ml
 #SBATCH -p ml
