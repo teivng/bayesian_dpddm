@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "bayesian_dpddm"
-version = "1.0.5"
+version = "1.0.6"
 authors = [
     { name = "viet", email = "viet@cs.toronto.edu" },
     {name = "sid", email = "sid.arya@mail.utoronto.ca"}
@@ -27,6 +27,7 @@ dependencies = [
     'pillow>=11.0.0',
     'wandb>=0.19.6',
     'hydra-core>=1.3.2',
+    'wilds>=2.0.0',
     'twine',
     'build',
 ]
