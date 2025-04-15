@@ -116,6 +116,8 @@ class DPDDMBayesianMonitor(DPDDMMonitor):
                     'train_acc': self.output_metrics['train_acc'][-1],
                     'val_loss': self.output_metrics['val_loss'][-1],
                     'val_acc': self.output_metrics['val_acc'][-1],
+                    'ood_test_loss': self.output_metrics['ood_test_loss'][-1] if testloader else None,
+                    'ood_test_acc': self.output_metrics['ood_test_acc'][-1] if testloader else None,
                 })
 
         return self.output_metrics

@@ -58,12 +58,13 @@ def main(args:DictConfig):
     wandb.config = OmegaConf.to_container(
         args, resolve=True, throw_on_missing=True
     )
-    wandb.config.GPU = torch.cuda.get_device_name(0)
     
     run = wandb.init(project=args.wandb_cfg.project,
                      settings=wandb.Settings(start_method='thread') # for hydra
                      )
     
+    run.config.update({'GPU': torch.cuda.get_device_name()})
+    print('GPU: ', torch.cuda.get_device_name())
     ''' Get datasets '''
     dataset = get_datasets(args) 
     
