@@ -15,4 +15,4 @@
 cd /voyager/projects/viet/bayesian_dpddm
 source /pkgs/anaconda3/etc/profile.d/conda.sh
 conda activate dpddm_tmp
-wandb agent opent03-team/wilds_dpddm/1u4t2vgy
+wandb agent opent03-team/wilds_dpddm/4f1mtqe8
