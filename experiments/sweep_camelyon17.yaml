@@ -1,6 +1,6 @@
 project: wilds_dpddm
 program: experiments/run.py
-method: bayes
+method: grid
 metric:
   name: tpr
   goal: maximize
@@ -10,22 +10,23 @@ parameters:
     values: [camelyon17]         # this is fine
   dataset.frac:
     value: 1.0                   # use 'value' for constant
+  dpddm.data_sample_size:
+    values: [10, 20, 50]
   model.resnet_type:
     values: ['resnet18', 'resnet34', 'resnet50']
   model.resnet_pretrained:
     value: true
   model.freeze_features:
     values: [true, false]
+  dpddm.temp:
+    values: [10, 5, 2, 1]
   model.reg_weight_factor:
     values: [1, 10, 100]
   model.prior_scale:
     values: [1.0, 2.0, 5.0]
   model.wishart_scale:
     values: [1.0, 2.0, 5.0]
-  dpddm.data_sample_size:
-    values: [10, 20, 50]
-  dpddm.temp:
-    values: [1, 2, 5, 10]
+  
 
 command: 
   - ${env}
