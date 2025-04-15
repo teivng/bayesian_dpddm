@@ -1,6 +1,6 @@
 project: wilds_dpddm
 program: experiments/run.py
-method: grid
+method: bayes
 metric:
   name: tpr
   goal: maximize
