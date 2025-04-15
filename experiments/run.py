@@ -80,7 +80,10 @@ def main(args:DictConfig):
     )
     
     ''' Log random seed '''
-    wandb.log({'seed': args.seed})
+    wandb.log({'seed': args.seed, 
+               'data_sample_size': args.dpddm.data_sample_size,
+               'GPU': torch.cuda.get_device_name(),
+    })
     
     # =========================================================
     # ==============Base Classifier Training===================

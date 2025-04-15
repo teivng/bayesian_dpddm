@@ -2,8 +2,8 @@ project: wilds_dpddm
 program: experiments/run.py
 method: bayes
 metric:
-  name: fpr_id
-  goal: minimize
+  name: tpr
+  goal: maximize
 
 parameters:
   dataset: 
@@ -23,7 +23,7 @@ parameters:
   model.wishart_scale:
     values: [1.0, 2.0, 5.0]
   dpddm.data_sample_size:
-    values: [50, 100, 200]
+    values: [10, 20, 50]
   dpddm.temp:
     values: [1, 2, 5, 10]
 
