@@ -5,7 +5,7 @@ disagreement_lr: 0.01
 disagreement_batch_size: 64
 disagreement_alpha: 0.8
 
-num_epochs: 10
+num_epochs: 5
 batch_size: 64
 lr: 1e-5
 wd: 0.0001
@@ -13,3 +13,4 @@ optimizer: torch.optim.AdamW
 clip_val: 1
 val_freq: 1
 num_workers: 10
+pin_memory: True

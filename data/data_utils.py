@@ -146,7 +146,8 @@ def get_cifar10_datasets(args:DictConfig, download=True):
 
 
 class InMemoryCamelyonSubset(Dataset):
-    def __init__(self, wilds_subset, transform=None):
+    def __init__(self, wilds_subset, transform=None, device='cuda'):
+        self.device = device
         self.transform = transform
         self._preload(wilds_subset)
 
@@ -155,6 +156,10 @@ class InMemoryCamelyonSubset(Dataset):
         self.data = []
         for idx in tqdm(range(len(wilds_subset))):
             x, y, metadata = wilds_subset[idx]  # returns (image, label, metadata)
+            if self.transform:
+                x = self.transform(x)
+            x = x.detach().to(self.device)
+            y = torch.tensor(y).detach().to(self.device)
             self.data.append((x, y, metadata))
         print("Preloading complete.")
 
@@ -163,8 +168,6 @@ class InMemoryCamelyonSubset(Dataset):
 
     def __getitem__(self, idx):
         x, y, metadata = self.data[idx]
-        if self.transform:
-            x = self.transform(x)
         return x, y, metadata
 
 
@@ -211,7 +214,7 @@ def get_camelyon17_datasets(args:DictConfig):
         else:
             ds.transform = camelyon17_val_transform
         #in_memory_ds = InMemoryCamelyonSubset(ds, camelyon17_train_transform if split=='train' else camelyon17_val_transform)
-        dataset_dict[split] = ds
+        dataset_dict[split] = ds #InMemoryCamelyonSubset(ds, camelyon17_val_transform)
     return dataset_dict
 
 

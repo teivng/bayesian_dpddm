@@ -14,3 +14,11 @@ from_pretrained: False
 seed: 57
 self_log: False
 
+train:
+  num_workers: 10
+  batch_size: 256
+  num_epochs: 5
+  lr: 1e-5
+
+dataset:
+  frac: 1.0

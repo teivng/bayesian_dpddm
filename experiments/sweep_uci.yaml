@@ -3,7 +3,7 @@ program: experiments/run.py
 method: grid
 metric:
   name: tpr
-  goal: minimize
+  goal: maximize
 parameters:
   dataset:
     values: [uci]

@@ -39,7 +39,26 @@ class DPDDMBayesianMonitor(DPDDMMonitor):
         super(DPDDMBayesianMonitor, self).__init__(*args, **kwargs)
     
 
-    def train_model(self, tqdm_enabled=False):
+    def evaluate_model(self, loader, tqdm_enabled=False):
+        running_loss = []
+        running_acc = []
+        with torch.no_grad():
+            self.model.eval()
+            for test_step, batch in enumerate(tqdm(loader, leave=False)):
+                features, labels, *metadata = batch
+                features, labels = features.to(self.device), labels.to(self.device)
+
+                out = self.model(features)
+                loss = out.val_loss_fn(labels)
+                probs = out.predictive.probs
+                acc = self.eval_acc(probs, labels).item()
+
+                running_loss.append(loss.item())
+                running_acc.append(acc)
+                
+        return running_loss, running_acc
+    
+    def train_model(self, tqdm_enabled=False, testloader=None):
         """Initial training of the model.
 
         Args:
@@ -50,6 +69,10 @@ class DPDDMBayesianMonitor(DPDDMMonitor):
         """
         f = tqdm if tqdm_enabled else lambda x: x
         for epoch in f(range(self.train_cfg.num_epochs)):
+            # =========================================================
+            # ===================One Training Epoch====================
+            # =========================================================        
+                
             self.model.train()
             running_loss = []
             running_acc = []
@@ -65,27 +88,23 @@ class DPDDMBayesianMonitor(DPDDMMonitor):
                 running_acc.append(acc)
                 loss.backward()
                 self.optimizer.step()
+                
             self.output_metrics['train_loss'].append(np.mean(running_loss))
             self.output_metrics['train_acc'].append(np.mean(running_acc))
+            
+            # =========================================================
+            # ==================Validate ID and OOD ===================
+            # =========================================================
             if epoch % self.train_cfg.val_freq == 0:
-                running_val_loss = []
-                running_val_acc = []
-                with torch.no_grad():
-                    self.model.eval()
-                    for test_step, batch in enumerate(self.valloader):
-                        features, labels, *metadata = batch
-                        features, labels = features.to(self.device), labels.to(self.device)
-
-                        out = self.model(features)
-                        loss = out.val_loss_fn(labels)
-                        probs = out.predictive.probs
-                        acc = self.eval_acc(probs, labels).item()
-
-                        running_val_loss.append(loss.item())
-                        running_val_acc.append(acc)
-
-                    self.output_metrics['val_loss'].append(np.mean(running_val_loss))
-                    self.output_metrics['val_acc'].append(np.mean(running_val_acc))
+                running_val_loss, running_val_acc = self.evaluate_model(self.valloader, tqdm_enabled=tqdm_enabled)
+                self.output_metrics['val_loss'].append(np.mean(running_val_loss))
+                self.output_metrics['val_acc'].append(np.mean(running_val_acc))
+                if testloader:
+                    running_test_loss, running_test_acc = self.evaluate_model(testloader, tqdm_enabled=tqdm_enabled)
+                    self.output_metrics['ood_test_loss'].append(np.mean(running_test_loss))
+                    self.output_metrics['ood_test_acc'].append(np.mean(running_test_acc))
+            
+            
             if epoch % 10 == 0:
                 print('Epoch: {:2d}, train loss: {:4.4f}'.format(epoch, np.mean(running_loss)))
                 print('Epoch: {:2d}, valid loss: {:4.4f}'.format(epoch, np.mean(np.mean(running_val_loss))))
