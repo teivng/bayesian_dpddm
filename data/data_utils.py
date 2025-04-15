@@ -6,16 +6,22 @@ import torchvision
 from torchvision.transforms import v2
 from torchvision import transforms
 from omegaconf import DictConfig
-from torch.utils.data import Dataset, Subset
+from torch.utils.data import Dataset, Subset, random_split
 from wilds.datasets.camelyon17_dataset import Camelyon17Dataset
 from torch.utils.data import Dataset
-from PIL import Image
 
+from typing import Tuple
 from tqdm.auto import tqdm
 
 # ================================================
 # ===========General Data Utilities===============
 # ================================================
+
+
+def split_dataset(dataset: Dataset, num_samples: int, random_seed: int = 57) -> Tuple[Dataset, Dataset]:
+    return random_split(dataset, [num_samples, len(dataset) - num_samples],
+                        generator=torch.Generator().manual_seed(random_seed))
+
 
 class TensorDataset(Dataset, ABC):
     """Abstract torch tensor dataset class.
@@ -192,29 +198,39 @@ camelyon17_val_transform = transforms.Compose([
 
 def get_camelyon17_datasets(args:DictConfig):
     """Returns WILDS Camelyon17 Dataset objects
-
-
+    We split the training set into a smaller validation set to train Phi.
+    
     Returns:
         dict: contains the WILDS dataset splits already configured for Bayesian D-PDDM.
     """
     os.makedirs(args.dataset.data_dir, exist_ok=True)
     dataset = Camelyon17Dataset(root_dir=args.dataset.data_dir, download=args.dataset.download)
-    splits = {
-        'train': 'train',
-        'valid': 'val',
-        'dpddm_train': 'val',
-        'dpddm_id': 'id_val',
-        'dpddm_ood': 'test'
-    }
+    
     dataset_dict = {}
-    for split in splits.keys():
-        ds = dataset.get_subset(splits[split], frac=args.dataset.frac)
-        if split == 'train':
-            ds.transform = camelyon17_train_transform
+    
+    # Split the trainign set into train and id_valid
+    ds_train = dataset.get_subset('train', frac=args.dataset.frac)
+    ds_train, ds_id1_val = split_dataset(ds_train, num_samples=int(len(ds_train)*0.9), random_seed=args.seed)
+    
+    ds_id2_val = dataset.get_subset('id_val', frac=args.dataset.frac)
+    ds_ood = dataset.get_subset('test', frac=args.dataset.frac)
+    
+    # train dpddm using the in-distribution validation set split from the training set
+    dataset_dict = {
+        'train': ds_train,
+        'valid': ds_id1_val,
+        'dpddm_train': ds_id1_val,
+        'dpddm_id': ds_id2_val,
+        'dpddm_ood': ds_ood
+    }
+    
+    for k in dataset_dict:
+        if k == 'train':
+            dataset_dict[k].dataset.transform = camelyon17_train_transform
+        elif k in ['valid', 'dpddm_train']:
+            dataset_dict[k].dataset.transform = camelyon17_val_transform
         else:
-            ds.transform = camelyon17_val_transform
-        #in_memory_ds = InMemoryCamelyonSubset(ds, camelyon17_train_transform if split=='train' else camelyon17_val_transform)
-        dataset_dict[split] = ds #InMemoryCamelyonSubset(ds, camelyon17_val_transform)
+            dataset_dict[k].transform = camelyon17_val_transform
     return dataset_dict
 
 
