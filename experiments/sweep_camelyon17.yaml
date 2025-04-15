@@ -30,6 +30,7 @@ parameters:
 command: 
   - ${env}
   - python 
+  - -u
   - ${program}
   - --config-name=camelyon17
   - ${args_no_hyphens}
