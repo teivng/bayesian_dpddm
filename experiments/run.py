@@ -54,10 +54,11 @@ def main(args:DictConfig):
     # ==================Initialization=========================
     # =========================================================
     
-    ''' wandb initialization '''
+    ''' wandb config initialization '''
     wandb.config = OmegaConf.to_container(
         args, resolve=True, throw_on_missing=True
     )
+    wandb.config.GPU = torch.cuda.get_device_name(0)
     
     run = wandb.init(project=args.wandb_cfg.project,
                      settings=wandb.Settings(start_method='thread') # for hydra
@@ -80,10 +81,7 @@ def main(args:DictConfig):
     )
     
     ''' Log random seed '''
-    wandb.log({'seed': args.seed, 
-               'data_sample_size': args.dpddm.data_sample_size,
-               'GPU': torch.cuda.get_device_name(),
-    })
+    wandb.log({'seed': args.seed})
     
     # =========================================================
     # ==============Base Classifier Training===================
