@@ -41,13 +41,15 @@ class DPDDMMonitor(ABC):
                  trainset: Dataset,
                  valset: Dataset,
                  train_cfg: TrainConfig,
-                 device=torch.device):
+                 device=torch.device,
+                 verbose=True):
         
         self.model = model
         self.trainset = trainset
         self.valset = valset
         self.train_cfg = train_cfg
         self.device = device
+        self.verbose = verbose
         
         # Get optimizer from string
         opt_cls = get_class_from_string(train_cfg.optimizer)

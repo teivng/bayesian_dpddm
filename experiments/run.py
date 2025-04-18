@@ -1,5 +1,6 @@
 import os
 os.environ['HYDRA_FULL_ERROR'] = "1"
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
 import wandb
 import hydra
 import pandas as pd
@@ -10,31 +11,35 @@ parentdir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pard
 sys.path.append(parentdir)
 import fcntl
 
-from bayesian_dpddm import ConvModel, DPDDMBayesianMonitor, MLPModel, DPDDMFullInformationMonitor, ResNetModel
+from bayesian_dpddm import ConvModel, DPDDMBayesianMonitor, MLPModel, DPDDMFullInformationMonitor, ResNetModel, BERTModel
 import torch
 import torch.nn as nn
 #import torch.multiprocessing as mp
 import numpy as np
+from experiments.utils import get_datasets, get_configs
+
 
 torch.backends.cudnn.benchmark = True
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-from experiments.utils import get_datasets, get_configs
 
 # base models
 base_models = {
     'cifar10': ConvModel,
     'uci': MLPModel,
     'synthetic': MLPModel,
-    'camelyon17': ResNetModel
+    'camelyon17': ResNetModel,
+    'civilcomments': BERTModel,
 }
+
 
 monitors = {
     'bayesian': DPDDMBayesianMonitor,
     'fi': DPDDMFullInformationMonitor
 }
 
-@hydra.main(config_path='configs/', config_name='camelyon17', version_base='1.2')
+
+@hydra.main(config_path='configs/', config_name='civilcomments', version_base='1.2')
 def main(args:DictConfig):
     # =========================================================
     # ========================Seeding==========================

@@ -47,7 +47,6 @@ class DPDDMBayesianMonitor(DPDDMMonitor):
             for test_step, batch in enumerate(tqdm(loader, leave=False)):
                 features, labels, *metadata = batch
                 features, labels = features.to(self.device), labels.to(self.device)
-
                 out = self.model(features)
                 loss = out.val_loss_fn(labels)
                 probs = out.predictive.probs
@@ -78,6 +77,9 @@ class DPDDMBayesianMonitor(DPDDMMonitor):
             running_acc = []
             for train_step, batch in enumerate(tqdm(self.trainloader, leave=False)):
                 features, labels, *_ = batch
+                print(type(features))
+                print(features)
+                exit(0)
                 self.optimizer.zero_grad()
                 features, labels = features.to(self.device), labels.to(self.device)
                 out = self.model(features)
@@ -92,6 +94,8 @@ class DPDDMBayesianMonitor(DPDDMMonitor):
             self.output_metrics['train_loss'].append(np.mean(running_loss))
             self.output_metrics['train_acc'].append(np.mean(running_acc))
             
+            if self.verbose:
+                print('Epoch: {:2d}, train loss: {:4.4f}\ttrain accuracy: {:4.4f}'.format(epoch, self.output_metrics['train_loss'][-1], self.output_metrics['train_acc'][-1]))
             # =========================================================
             # ==================Validate ID and OOD ===================
             # =========================================================
@@ -99,15 +103,14 @@ class DPDDMBayesianMonitor(DPDDMMonitor):
                 running_val_loss, running_val_acc = self.evaluate_model(self.valloader, tqdm_enabled=tqdm_enabled)
                 self.output_metrics['val_loss'].append(np.mean(running_val_loss))
                 self.output_metrics['val_acc'].append(np.mean(running_val_acc))
+                if self.verbose:
+                    print('Epoch: {:2d}, val loss: {:4.4f}\tval accuracy: {:4.4f}'.format(epoch, self.output_metrics['val_loss'][-1], self.output_metrics['val_acc'][-1]))
                 if testloader:
                     running_test_loss, running_test_acc = self.evaluate_model(testloader, tqdm_enabled=tqdm_enabled)
                     self.output_metrics['ood_test_loss'].append(np.mean(running_test_loss))
                     self.output_metrics['ood_test_acc'].append(np.mean(running_test_acc))
-            
-            
-            if epoch % 10 == 0:
-                print('Epoch: {:2d}, train loss: {:4.4f}'.format(epoch, np.mean(running_loss)))
-                print('Epoch: {:2d}, valid loss: {:4.4f}'.format(epoch, np.mean(np.mean(running_val_loss))))
+                    if self.verbose:
+                        print('Epoch: {:2d}, ood test loss: {:4.4f}\tood test accuracy: {:4.4f}'.format(epoch, self.output_metrics['ood_test_loss'][-1], self.output_metrics['ood_test_acc'][-1]))
             
             # wandb logging
             if wandb.run is not None:

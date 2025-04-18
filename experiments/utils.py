@@ -4,8 +4,8 @@ from torchvision.transforms import v2
 import torchvision
 import inspect
 from bayesian_dpddm.configs import TrainConfig
-from bayesian_dpddm.configs import ConvModelConfig, MLPModelConfig, ResNetModelConfig
-from data import get_cifar10_datasets, get_uci_datasets, get_synthetic_datasets, get_camelyon17_datasets
+from bayesian_dpddm.configs import ConvModelConfig, MLPModelConfig, ResNetModelConfig, BERTModelConfig
+from data import get_cifar10_datasets, get_uci_datasets, get_synthetic_datasets, get_camelyon17_datasets, get_civilcomments_datasets
 from omegaconf import DictConfig, OmegaConf
 
 
@@ -51,7 +51,8 @@ def get_configs(args:DictConfig):
         'cifar10': ConvModelConfig,
         'uci': MLPModelConfig,
         'synthetic': MLPModelConfig,
-        'camelyon17': ResNetModelConfig
+        'camelyon17': ResNetModelConfig,
+        'civilcomments': BERTModelConfig,
     }
     model_args = OmegaConf.to_container(args.model)
     train_args = OmegaConf.to_container(args.train)
@@ -100,6 +101,8 @@ def get_datasets(args:DictConfig):
     
     elif name == 'camelyon17':
         dataset_dict = get_camelyon17_datasets(args)
+    elif name == 'civilcomments':
+        dataset_dict = get_civilcomments_datasets(args)
         
     else: 
         raise NameError('Not a dataset with a known data pipeline implementation.')

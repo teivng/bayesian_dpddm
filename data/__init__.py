@@ -1,1 +1,5 @@
-from .data_utils import get_cifar10_datasets, get_uci_datasets, get_synthetic_datasets, get_camelyon17_datasets
+from .camelyon17_data import get_camelyon17_datasets
+from .cifar10_data import get_cifar10_datasets
+from .civilcomments_data import get_civilcomments_datasets
+from .synthetic_data import get_synthetic_datasets
+from .uci_data import get_uci_datasets

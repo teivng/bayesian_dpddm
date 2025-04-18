@@ -16,3 +16,4 @@ data/civilcomments_v1.0/
 experiments/data/
 .DS_Store
 .vscode/
+tmux*

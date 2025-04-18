@@ -42,10 +42,20 @@ class MLPModelConfig(ModelConfig):
     dropout: float
     return_ood: bool = False
     
+    
 @dataclass 
 class ResNetModelConfig(ModelConfig):
+    """Configuration for ResNet models"""
     resnet_type: str
     hidden_dim: int
     resnet_pretrained: bool = False
+    freeze_features: bool = False
+    return_ood: bool = False
+    
+    
+@dataclass 
+class BERTModelConfig(ModelConfig):
+    """Configuration for BERT-based models"""
+    bert_type: str
     freeze_features: bool = False
     return_ood: bool = False
