@@ -5,7 +5,7 @@ import torchvision
 import inspect
 from bayesian_dpddm.configs import TrainConfig
 from bayesian_dpddm.configs import ConvModelConfig, MLPModelConfig, ResNetModelConfig, BERTModelConfig
-from data import get_cifar10_datasets, get_uci_datasets, get_synthetic_datasets, get_camelyon17_datasets, get_civilcomments_datasets
+from data import get_cifar10_datasets, get_uci_datasets, get_synthetic_datasets, get_camelyon17_datasets, get_civilcomments_datasets_featurized, get_civilcomments_datasets_tokenized
 from omegaconf import DictConfig, OmegaConf
 
 
@@ -102,7 +102,12 @@ def get_datasets(args:DictConfig):
     elif name == 'camelyon17':
         dataset_dict = get_camelyon17_datasets(args)
     elif name == 'civilcomments':
-        dataset_dict = get_civilcomments_datasets(args)
+        if args.dataset.featurized:
+            print('Featurized dataset requested. Using featurized pipeline.')
+            dataset_dict = get_civilcomments_datasets_featurized(args)
+        else:
+            print('Tokenized dataset requested. Using tokenized pipeline.')
+            dataset_dict = get_civilcomments_datasets_tokenized(args)
         
     else: 
         raise NameError('Not a dataset with a known data pipeline implementation.')

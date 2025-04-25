@@ -131,7 +131,7 @@ class DPDDMMonitor(ABC):
         Uses self.dpddm_test to compute Phi. 
 
         Args:
-            dataset (Dataset): dataset object
+            dataset (Dataset): dataset object, should be in-distribution
             Phi_size (int, optional): size of phi. Defaults to 500.
         """
         f = tqdm if tqdm_enabled else lambda x: x 
@@ -174,6 +174,22 @@ class DPDDMMonitor(ABC):
         """
         pass
     
+    @abstractmethod
+    def evaluate_model(self, loader:DataLoader, tqdm_enabled=False) -> Tuple[float, float]:
+        """Abstract evaluation function
+        
+        Evaluates self.model on the given loader. 
+
+        Args:
+            loader (DataLoader): dataloader to evaluate on
+            tqdm_enabled (bool, optional): enables tqdm during evaluation. Defaults to False.
+
+        Returns:
+            tuple(list, list): 2-tuple containing:
+                - running loss
+                - running accuracy
+        """
+        pass
     
     @abstractmethod
     def get_pseudolabels(self, X:torch.tensor, *args, **kwargs) -> torch.tensor:

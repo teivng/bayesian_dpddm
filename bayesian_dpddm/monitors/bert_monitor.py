@@ -1,32 +1,37 @@
-from tqdm import tqdm
-import wandb 
-import numpy as np
+from tqdm.auto import tqdm
 import torch
-import multiprocessing
-from torch.utils.data import DataLoader, Dataset
-
-from ..models.base import DPDDMAbstractModel
-from ..configs import TrainConfig
-from .utils import temperature_scaling, sample_from_dataset, get_class_from_string
-from .monitor import DPDDMMonitor
+import wandb
+import numpy as np
 
 
-class TempDataset(torch.utils.data.Dataset):
-    ''' Temporary dataset to batch for data that does not fit on GPU '''
-    def __init__(self, X, y):
-        self.X = X
-        self.y = y
+from .bayesian_monitor import DPDDMBayesianMonitor
+from .utils import temperature_scaling
+
+
+from wilds.datasets.civilcomments_dataset import CivilCommentsDataset
+from wilds.datasets.camelyon17_dataset import Camelyon17Dataset
+from torch.utils.data import Dataset
+
+from typing import Tuple
+
+
+def make_bert_input(input_ids, attention_mask, device, to_device=False):
+    input_dict = {
+        'input_ids': input_ids,
+        'attention_mask': attention_mask
+    }
+    if to_device:
+        input_dict['input_ids'] = input_dict['input_ids'].to(device)
+        input_dict['attention_mask'] = input_dict['attention_mask'].to(device)
         
-    def __len__(self):
-        return len(self.y)
-    
-    def __getitem__(self, idx):
-        return self.X[idx], self.y[idx]  
+    return input_dict
 
- 
-class DPDDMBayesianMonitor(DPDDMMonitor):
-    """Defines the Bayesian DPDDM Monitor (Algorithms 3 and 4).
-    
+
+
+class DPDDMBERTMonitor(DPDDMBayesianMonitor):
+    """Bayesian D-PDDM Monitor for BERT tokenized features. Allows model class to take in both input_ids and attention_mask.
+    Uses evaluation metrics provided by WILDS.
+
     Attributes:
         model (DPDDMAbstractModel): the model class, i.e. hypothesis class for the base classifier
         trainset (Dataset): torch training dataset
@@ -34,11 +39,10 @@ class DPDDMBayesianMonitor(DPDDMMonitor):
         train_cfg (TrainConfig): TrainConfig object configuring all aspects of training
         device (torch.device): torch.device, cuda or cpu
     """
-
-    def __init__(self, *args, **kwargs):
-        super(DPDDMBayesianMonitor, self).__init__(*args, **kwargs)
     
-
+    def __init__(self, *args, **kwargs):
+        super(DPDDMBERTMonitor, self).__init__(*args, **kwargs)
+    
     def evaluate_model(self, loader, tqdm_enabled=False):
         running_loss = []
         running_acc = []
@@ -46,8 +50,11 @@ class DPDDMBayesianMonitor(DPDDMMonitor):
             self.model.eval()
             for test_step, batch in enumerate(tqdm(loader, leave=False)):
                 features, labels, *metadata = batch
-                features, labels = features.to(self.device), labels.to(self.device)
-                out = self.model(features)
+                input_ids, attention_mask = features
+                labels = labels.to(self.device)
+                model_input = make_bert_input(input_ids, attention_mask, \
+                    device=self.device, to_device=True)   
+                out = self.model(model_input['input_ids'], model_input['attention_mask'])
                 loss = out.val_loss_fn(labels)
                 probs = out.predictive.probs
                 acc = self.eval_acc(probs, labels).item()
@@ -78,9 +85,12 @@ class DPDDMBayesianMonitor(DPDDMMonitor):
             running_acc = []
             for train_step, batch in enumerate(tqdm(self.trainloader, leave=False)):
                 features, labels, *_ = batch
+                input_ids, attention_mask = features
                 self.optimizer.zero_grad()
-                features, labels = features.to(self.device), labels.to(self.device)
-                out = self.model(features)
+                labels = labels.to(self.device)
+                model_input = make_bert_input(input_ids, attention_mask,\
+                    device=self.device, to_device=True)
+                out = self.model(model_input['input_ids'], model_input['attention_mask'])
                 loss = out.train_loss_fn(labels)
                 probs = out.predictive.probs
                 acc = self.eval_acc(probs, labels).item()
@@ -110,7 +120,7 @@ class DPDDMBayesianMonitor(DPDDMMonitor):
                     if self.verbose:
                         print('Epoch: {:2d}, ood test loss: {:4.4f}\tood test accuracy: {:4.4f}'.format(epoch, self.output_metrics['ood_test_loss'][-1], self.output_metrics['ood_test_acc'][-1]))
             
-            # wandb logging
+            # wandb loggingxwww
             if wandb.run is not None:
                 wandb.log({
                     'train_loss': self.output_metrics['train_loss'][-1],
@@ -124,41 +134,25 @@ class DPDDMBayesianMonitor(DPDDMMonitor):
         return self.output_metrics
     
     
-    def get_pseudolabels(self, X:torch.tensor):
-        """Given samples X, return pseudolabels assigned by self.model
-
-        Args:
-            X (torch.tensor): input tensor
-
-        Returns:
-            torch.tensor: pseudolabels labeled by self.model
-        """
+    def get_pseudolabels(self, dataset:Dataset):
         self.model.eval()
-        
-        '''loader = torch.utils.data.DataLoader(TempDataset(X, torch.arange(0, len(X))), batch_size=2048)
-        y_hat_collection = []
+        dataset = dataset.to(self.device)
         with torch.no_grad():
-            for X, _ in loader:
-                X = X.to(self.device)
-                features = self.model.get_features(X)
-                ll_dist = self.model.out_layer.logit_predictive(features)
-                y_hat = torch.argmax(ll_dist.loc, 1)
-                y_hat_collection.append(y_hat)
-        return torch.cat(y_hat_collection, dim=0)'''
-        X = X.to(self.device)
-        with torch.no_grad():
-            features = self.model.get_features(X)
+            output = self.model.features(input_ids=dataset.input_ids, attention_mask=dataset.attention_mask)
+            features = output.last_hidden_state[:,0,:]
             ll_dist = self.model.out_layer.logit_predictive(features)
             y_hat = torch.argmax(ll_dist.loc, 1)
         return y_hat
-
-
-    def compute_max_dis_rate(self, X:torch.tensor, y:torch.tensor, n_post_samples=5000, temperature=1):
+    
+    def compute_max_dis_rate(self, dataset:Dataset, 
+                             y_pseudo:torch.tensor, 
+                             n_post_samples:int=5000, 
+                             temperature:float=1.0):
         """Approximates the maximum disagreement rate among sampled weights.
 
         Args:
-            X (torch.tensor): input tensor
-            y (torch.tensor): pseudolabels
+            dataset (Dataset): dataset object
+            y_pseudo (torch.tensor): pseudolabels assigned by self.model
             n_post_samples (int, optional): number of posterior weights. Defaults to 5000.
             temperature (int, optional): softening of the logits. Defaults to 1.
 
@@ -166,33 +160,46 @@ class DPDDMBayesianMonitor(DPDDMMonitor):
             float: approximate maximum disagreement rate
         """
         self.model.eval()
-        '''loader = torch.utils.data.DataLoader(TempDataset(X, y), batch_size=2048)
-        maxes = [] 
+        dataset = dataset.to(self.device)
+        
         with torch.no_grad():
-            for features, labels in loader:
-                features, labels = features.to(self.device), labels.to(self.device)
-                output = self.model.get_features(features)
-                ll_dist = self.model.out_layer.logit_predictive(output)
-                logits_samples = ll_dist.rsample(sample_shape=torch.Size([n_post_samples]))
-            
-                # scale down with temperature
-                logits_samples = temperature_scaling(logits_samples, temperature)
-                y_hat = torch.argmax(logits_samples, -1)
-                y_tile = torch.tile(labels, (n_post_samples, 1)).cuda()
-                dis_mat = (y_hat != y_tile)
-                dis_rate = dis_mat.sum(dim=-1)/len(y)
-                maxes.append(torch.max(dis_rate).item())
-        return max(maxes)'''
-        X, y = X.to(self.device), y.to(self.device)
-        with torch.no_grad():
-            output = self.model.get_features(X)
+            output = self.model.get_features(input_ids=dataset.input_ids, \
+                attention_mask=dataset.attention_mask)
             ll_dist = self.model.out_layer.logit_predictive(output)
             logits_samples = ll_dist.rsample(sample_shape=torch.Size([n_post_samples]))
             logits_samples = temperature_scaling(logits_samples, temperature)
             #y_hat = torch.argmax(logits_samples, -1)
             dist = torch.distributions.Categorical(logits=logits_samples)
             y_hat = dist.sample()
-            y_tile = torch.tile(y, (n_post_samples, 1)).to(self.device)
+            y_tile = torch.tile(y_pseudo, (n_post_samples, 1)).to(self.device)
             dis_mat = (y_hat != y_tile)
-            dis_rate = dis_mat.sum(dim=-1)/len(y)
+            dis_rate = dis_mat.sum(dim=-1)/len(y_pseudo)
         return torch.max(dis_rate).item()
+    
+    def dpddm_test(self, dataset:Dataset, data_sample_size:int=200, alpha=0.95, replace=True, *args, **kwargs) -> Tuple[float, bool]:
+        """Given a dataset, computes the maximum disagreement rate as well as the OOD verdict.
+        Used to both generate Phi and Algorithms 2 and 4.
+
+        Args:
+            dataset (Dataset): dataset object
+            data_sample_size (int, optional): size of bootstraped dataset. Defaults to 1000
+            alpha (float): statistical power of the test. Defaults to 0.95
+            replace (bool): sample with replacement. Defaults to True
+
+        Returns:
+            tuple(float, bool): 2-tuple containing:
+            - maximum disagreement rate achievable by models from the same hypothesis class
+                while (approximately) maintaining correctness on training set
+            - OOD verdict w.r.t. self.Phi
+        """
+        with torch.no_grad():
+            sampled_dataset = dataset.sample(n=data_sample_size, replace=replace)
+            y_pseudo = self.get_pseudolabels(sampled_dataset)
+            max_dis_rate = self.compute_max_dis_rate(dataset=sampled_dataset, 
+                                                     y_pseudo=y_pseudo, 
+                                                     *args, **kwargs)
+
+
+        return max_dis_rate, max_dis_rate >= np.quantile(self.Phi, alpha) if self.Phi != [] else 0 
+
+    

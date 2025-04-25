@@ -11,7 +11,9 @@ parentdir = os.path.abspath(os.path.join(os.path.dirname(__file__), os.path.pard
 sys.path.append(parentdir)
 import fcntl
 
-from bayesian_dpddm import ConvModel, DPDDMBayesianMonitor, MLPModel, DPDDMFullInformationMonitor, ResNetModel, BERTModel
+from bayesian_dpddm.monitors import DPDDMBayesianMonitor, DPDDMFullInformationMonitor, DPDDMBERTMonitor
+from bayesian_dpddm.models import ConvModel, MLPModel, ResNetModel, BERTModel
+
 import torch
 import torch.nn as nn
 #import torch.multiprocessing as mp
@@ -35,7 +37,8 @@ base_models = {
 
 monitors = {
     'bayesian': DPDDMBayesianMonitor,
-    'fi': DPDDMFullInformationMonitor
+    'fi': DPDDMFullInformationMonitor,
+    'bert': DPDDMBERTMonitor,
 }
 
 

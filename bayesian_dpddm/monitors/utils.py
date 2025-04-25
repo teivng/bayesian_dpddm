@@ -32,10 +32,9 @@ def sample_from_dataset(n_samples:int, dataset:Dataset, replace=True):
 
     Returns:
         torch.tensor: sample from dataset.
+        torch.tensor: true labels of the samples
     """
-    print(dataset[0][0])
-    exit(0)
-        
+    data_size = dataset[0][0].size()
     indices = np.random.choice(np.arange(len(dataset)), n_samples, replace=replace)
     tmp = torch.zeros(size=(n_samples, *data_size))
     true_labels = torch.zeros(size=(n_samples,))

@@ -9,16 +9,16 @@ defaults:
   - override hydra/job_logging: disabled
   - _self_
 
-monitor_type: bayesian
+monitor_type: bert
 from_pretrained: False
 seed: 57
 self_log: False
 
 train:
-  num_workers: 10
+  num_workers: 6
   batch_size: 256
-  num_epochs: 5
-  lr: 1e-5
+  num_epochs: 10
+  lr: 1e-4
 
 dataset:
-  frac: 0.1
+  frac: 1.0

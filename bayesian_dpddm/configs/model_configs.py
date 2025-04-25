@@ -57,5 +57,6 @@ class ResNetModelConfig(ModelConfig):
 class BERTModelConfig(ModelConfig):
     """Configuration for BERT-based models"""
     bert_type: str
+    max_length: int
     freeze_features: bool = False
     return_ood: bool = False

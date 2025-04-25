@@ -4,7 +4,8 @@ import torchvision.models as models
 import vbll
 from .base import DPDDMAbstractModel
 from ..configs import ModelConfig
-from transformers import AutoModelForSequenceClassification, AutoTokenizer, AutoModel
+from transformers import AutoTokenizer, AutoModel
+from functools import partial
 
 bert_dict = {
     'distilbert': "distilbert/distilbert-base-uncased-finetuned-sst-2-english"
@@ -17,7 +18,7 @@ class BERTModel(DPDDMAbstractModel):
         super(BERTModel, self).__init__()
         
         self.features = AutoModel.from_pretrained(bert_dict[cfg.bert_type])
-        #self.tokenizer = AutoTokenizer.from_pretrained(bert_dict[cfg.bert_type])
+        self.tokenizer = AutoTokenizer.from_pretrained(bert_dict[cfg.bert_type])
         
         if cfg.freeze_features: 
             for param in self.features.parameters():
@@ -38,14 +39,32 @@ class BERTModel(DPDDMAbstractModel):
         self.device = next(self.features.parameters()).device  # update tracked device
         return self  # to allow chaining .to(...)
     
-    def get_features(self, x):
-        output = self.features(**x).last_hidden_state[:,0,:]
-        return output
+    def get_features(self, input_ids, attention_mask):
+        x = self.features(input_ids, attention_mask).last_hidden_state[:,0,:]
+        return x
     
-    def forward(self, x):
-        x = self.get_features(x)
+    def forward(self, input_ids, attention_mask):
+        x = self.get_features(input_ids, attention_mask)
         return self.out_layer(x)
   
     def get_last_layer(self):
         return self.out_layer
+    
+    def get_features_inference(self, x):
+        tokenize = partial(
+            self.tokenizer,
+            padding='max_length',
+            truncation=True,
+            max_length=self.cfg.max_length,
+            return_tensors='pt'
+            
+        )
+        x = tokenize(x)
+        output = self.get_features(x['input_ids'].to(self.device), \
+            x['attention_mask'].to(self.device))
+        return output
+    
+    def infer(self, x):
+        output = self.get_features_inference(x)
+        return self.out_layer(output)
     

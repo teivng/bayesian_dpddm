@@ -1,0 +1,31 @@
+project: wilds_dpddm
+program: experiments/run.py
+method: bayes
+metric:
+  name: tpr
+  goal: maximize
+
+parameters:
+  dataset: 
+    values: [civilcomments]         # this is fine
+  dataset.frac:
+    value: 1.0                   # use 'value' for constant
+  model.prior_scale:
+    values: [1.0, 10., 50., 100.]
+  model.wishart_scale:
+    values: [1.0, 10., 50., 100.]
+  model.reg_weight_factor:
+    values: [1, 10, 50, 100]
+  dpddm.data_sample_size:
+    values: [10, 20, 50]
+  dpddm.temp:
+    values: [10, 5, 2, 1]
+  
+
+command: 
+  - ${env}
+  - python 
+  - -u
+  - ${program}
+  - --config-name=civilcomments
+  - ${args_no_hyphens}
