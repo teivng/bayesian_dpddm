@@ -10,14 +10,14 @@ defaults:
   - _self_
 
 monitor_type: bert
-from_pretrained: False
+from_pretrained: False 
 seed: 57
 self_log: False
 
 train:
   num_workers: 6
   batch_size: 256
-  num_epochs: 10
+  num_epochs: 5
   lr: 1e-4
 
 dataset:

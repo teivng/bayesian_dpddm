@@ -6,20 +6,16 @@ metric:
   goal: maximize
 
 parameters:
-  dataset: 
-    values: [civilcomments]         # this is fine
-  dataset.frac:
-    value: 1.0                   # use 'value' for constant
   model.prior_scale:
-    values: [1.0, 10., 50., 100.]
+    values: [1, 4, 16, 64, 128]
   model.wishart_scale:
-    values: [1.0, 10., 50., 100.]
+    values: [1, 4, 16, 64, 128]
   model.reg_weight_factor:
-    values: [1, 10, 50, 100]
+    values: [1, 4, 16, 64, 128]
   dpddm.data_sample_size:
     values: [10, 20, 50]
   dpddm.temp:
-    values: [10, 5, 2, 1]
+    values: [8, 4, 2, 1]
   
 
 command: 
