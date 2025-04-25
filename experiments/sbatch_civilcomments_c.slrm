@@ -4,7 +4,7 @@
 #SBATCH -q ml
 #SBATCH -p ml
 #SBATCH -c 6
-#SBATCH --exclude=concerto1,concerto2,concerto3
+#SBATCH -w concerto2
 #SBATCH --mem=32G
 #SBATCH --gres=gpu:1
 #SBATCH --time="unlimited"
