@@ -1,0 +1,27 @@
+#!/bin/bash
+#SBATCH --job-name="ccsweep"
+#SBATCH -A rahul
+#SBATCH -q ml
+#SBATCH -p ml
+#SBATCH -c 6
+#SBATCH --mem=32G
+#SBATCH --gres=gpu:1
+#SBATCH --time="unlimited"
+#SBATCH --open-mode=append
+#SBATCH --output=logs/slurm_%A_%a.out
+#SBATCH --error=logs/slurm_%A_%a.err
+#SBATCH --array=0-149   # ← change: 150 jobs (3 sizes × 50 seeds)
+
+cd /mfs1/u/viet/bayesian_dpddm
+
+source /pkgs/anaconda3/etc/profile.d/conda.sh
+conda activate dpddm
+
+# 3 sample sizes, 50 seeds per size
+DATA_SAMPLE_SIZES=(10 20 50)
+SIZE_INDEX=$((SLURM_ARRAY_TASK_ID / 50))      # ← change: divide by 50 instead of 30
+SEED=$((30 + SLURM_ARRAY_TASK_ID % 50))  # Starts at seed=30 to avoid prior 0–29
+DATA_SAMPLE_SIZE=${DATA_SAMPLE_SIZES[$SIZE_INDEX]}
+
+echo "Running seed=$SEED with data_sample_size=$DATA_SAMPLE_SIZE"
+python experiments/run.py --config-name=uci_best seed=$SEED dpddm.data_sample_size=$DATA_SAMPLE_SIZE
