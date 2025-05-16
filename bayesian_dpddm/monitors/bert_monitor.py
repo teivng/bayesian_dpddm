@@ -13,6 +13,7 @@ from wilds.datasets.camelyon17_dataset import Camelyon17Dataset
 from torch.utils.data import Dataset
 
 from typing import Tuple
+from torcheval.metrics import BinaryF1Score
 
 
 def make_bert_input(input_ids, attention_mask, device, to_device=False):
@@ -63,6 +64,30 @@ class DPDDMBERTMonitor(DPDDMBayesianMonitor):
                 running_acc.append(acc)
                 
         return running_loss, running_acc
+    
+    def get_f1_score(self, loader, tqdm_enabled=False):
+        all_labels = []
+        all_preds = []
+        with torch.no_grad():
+            self.model.eval()
+            for test_step, batch in enumerate(tqdm(loader, leave=False)):
+                features, labels, *metadata = batch
+                input_ids, attention_mask = features
+                labels = labels.to(self.device)
+                model_input = make_bert_input(input_ids, attention_mask, \
+                    device=self.device, to_device=True)   
+                out = self.model(model_input['input_ids'], model_input['attention_mask'])
+                probs = out.predictive.probs
+                preds = torch.argmax(probs, dim=1).cpu()
+                all_labels.append(labels.cpu())
+                all_preds.append(preds)
+        
+        all_labels = torch.cat(all_labels)
+        all_preds = torch.cat(all_preds)
+        metric = BinaryF1Score(threshold=0.5)
+        metric.update(all_preds, all_labels)
+        return metric.compute().item()
+        
     
     
     def train_model(self, tqdm_enabled=False, testloader=None):

@@ -104,14 +104,14 @@ def get_civilcomments_datasets_tokenized(args:DictConfig):
     
     processed_dataset_path = f'data/civilcomments_v1.0/{args.model.bert_type}_tokenized.pt'
     if os.path.exists(processed_dataset_path):
-        print('BERT-preprocessed dataset exists! Loading...')
+        print('BERT-preprocessed CivilComments dataset exists! Loading...')
         tokenized_datasets = torch.load(processed_dataset_path, weights_only=False)
         print('Loading succesful!')
         
         # fake dsets
         dsets = {k: [] for k in ['train', 'id1', 'id2', 'test']}
     else:
-        print('BERT-preprocessed dataset not found. Processing...')
+        print('BERT-preprocessed CivilComments dataset not found. Processing...')
         os.makedirs(args.dataset.data_dir, exist_ok=True)
         dataset = CivilCommentsDataset(root_dir=args.dataset.data_dir, download=args.dataset.download)
         
@@ -144,7 +144,7 @@ def get_civilcomments_datasets_tokenized(args:DictConfig):
         )
         
         input_ids_dict = {k: [] for k in dsets.keys()}
-        attention_masks_dict = {k: [] for k in dsets.keys()}    
+        attention_mask_dict = {k: [] for k in dsets.keys()}    
         labels = {k: [] for k in dsets.keys()}
         metadata = {k: [] for k in dsets.keys()}
         
@@ -157,7 +157,7 @@ def get_civilcomments_datasets_tokenized(args:DictConfig):
                     try:
                         tokenized = tokenize(text)
                         input_ids_dict[k].append(tokenized['input_ids'])
-                        attention_masks_dict[k].append(tokenized['attention_mask'])
+                        attention_mask_dict[k].append(tokenized['attention_mask'])
                         labels[k].append(toxic)
                         metadata[k].append(meta)
                     except Exception as e:  
@@ -166,18 +166,18 @@ def get_civilcomments_datasets_tokenized(args:DictConfig):
         # concatenate 
         input_ids, attention_masks, labels, metadata = (
             {k: torch.cat(v, dim=0) for k, v in d.items()}
-            for d in (input_ids_dict, attention_masks_dict, labels, metadata)
+            for d in (input_ids_dict, attention_mask_dict, labels, metadata)
         )
         torch.save({
             'input_ids': input_ids_dict,
-            'attention_masks': attention_masks_dict,
+            'attention_mask': attention_mask_dict,
             'labels': labels,
             'metadata': metadata,
         }, processed_dataset_path)
     
     tmp = {k: TokenizedBERTDataset(
         tokenized_datasets['input_ids'][k],
-        tokenized_datasets['attention_masks'][k],
+        tokenized_datasets['attention_masks'][k], # @todo change this when tokenize again
         tokenized_datasets['labels'][k],
         tokenized_datasets['metadata'][k]
     ) for k in dsets.keys()}
@@ -190,6 +190,22 @@ def get_civilcomments_datasets_tokenized(args:DictConfig):
         'dpddm_ood': tmp['test']
     } 
     
+    '''Load Jigsaw dataset'''
+    jigsaw_dataset_path = f'data/jigsaw-toxic-comments/{args.model.bert_type}_tokenized.pt'
+    if os.path.exists(jigsaw_dataset_path):
+        print('BERT-preprocessed Jigsaw dataset exists! Loading...')
+        jigsaw_dataset = torch.load(jigsaw_dataset_path, weights_only=False)
+        print('Loading succesful!')
+        jigsaw = TokenizedBERTDataset(
+            jigsaw_dataset['input_ids'],
+            jigsaw_dataset['attention_mask'],
+            jigsaw_dataset['labels'],
+            jigsaw_dataset['metadata']
+        )
+    else:
+        print('BERT-preprocessed Jigsaw dataset not found. Processing...')
+    
+    dataset_dict['dpddm_ood'] = jigsaw
     return dataset_dict
 
 

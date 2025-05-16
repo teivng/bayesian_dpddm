@@ -15,4 +15,4 @@
 cd /mfs1/u/viet/bayesian_dpddm
 source /pkgs/anaconda3/etc/profile.d/conda.sh
 conda activate dpddm
-wandb agent opent03-team/wilds_dpddm/lt6pp7u0
+wandb agent opent03-team/wilds_dpddm/47v0bbmg

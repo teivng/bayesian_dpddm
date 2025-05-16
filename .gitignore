@@ -13,6 +13,7 @@ outputs/
 data/cifar10_data/
 data/camelyon17_v1.0/
 data/civilcomments_v1.0/
+data/jigsaw-toxic-comments/
 experiments/data/
 .DS_Store
 .vscode/
