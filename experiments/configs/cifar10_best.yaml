@@ -18,10 +18,11 @@ model:
 
 dpddm:
   data_sample_size: 10
-  temp: 1.5
+  temp: 1
+  Phi_size: 1000
 
 train:
-  num_epochs: 15
+  num_epochs: 10
   
 from_pretrained: False
 seed: 9927

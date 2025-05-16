@@ -1,0 +1,37 @@
+defaults:
+  - hydra: defaults
+  - train: camelyon17
+  - dataset: camelyon17
+  - dpddm: base
+  - model: resnet_model
+  - wandb_cfg: wilds
+  - override hydra/hydra_logging: disabled
+  - override hydra/job_logging: disabled
+  - _self_
+
+monitor_type: bayesian
+from_pretrained: False
+seed: 57
+self_log: True
+
+train:
+  num_workers: 10
+  batch_size: 256
+  num_epochs: 2
+  lr: 1e-5
+
+dataset:
+  frac: 1.0
+
+model:
+  resnet_type: resnet50
+  resnet_pretrained: True
+  prior_scale: 1
+  wishart_scale: 5
+  freeze_features: False
+  reg_weight_factor: 10
+
+dpddm:
+  data_sample_size: 10
+  temp: 2
+  Phi_size: 500

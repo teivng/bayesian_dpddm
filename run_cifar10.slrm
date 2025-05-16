@@ -1,0 +1,24 @@
+#!/bin/bash
+#SBATCH --job-name="cifar10_size50"
+#SBATCH -A rahul
+#SBATCH -q ml
+#SBATCH -p ml
+#SBATCH -c 6
+#SBATCH --mem=32G
+#SBATCH --gres=gpu:1
+#SBATCH --time="unlimited"
+#SBATCH --open-mode=append
+#SBATCH --output=logs/slurm_%A_%a.out
+#SBATCH --error=logs/slurm_%A_%a.err
+#SBATCH --array=0-19  # 20 jobs
+
+cd /mfs1/u/viet/bayesian_dpddm
+
+source /pkgs/anaconda3/etc/profile.d/conda.sh
+conda activate dpddm
+
+SEED=$((570 + SLURM_ARRAY_TASK_ID))
+SIZE=50
+
+echo "Running seed=$SEED with data_sample_size=$SIZE"
+python experiments/run.py --config-name=cifar10_best seed=$SEED dpddm.data_sample_size=$SIZE

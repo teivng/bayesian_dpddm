@@ -1,5 +1,4 @@
 defaults:
-  - _self_
   - hydra: defaults
   - train: defaults
   - dataset: uci
@@ -8,8 +7,12 @@ defaults:
   - wandb_cfg: defaults
   - override hydra/hydra_logging: disabled
   - override hydra/job_logging: disabled
+  - _self_
   
 monitor_type: bayesian
 from_pretrained: False
 seed: 57
 self_log: False
+
+train:
+  num_epochs: 20

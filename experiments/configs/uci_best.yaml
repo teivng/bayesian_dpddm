@@ -17,11 +17,12 @@ self_log: True
 model:
   mid_features: 64
   mid_layers: 2
-  reg_weight_factor: 10
+  reg_weight_factor: 50
 
 dpddm:
-  temp: 1.5
+  temp: 1
   data_sample_size: 10
+  Phi_size: 1000
 
 train:
   num_epochs: 20

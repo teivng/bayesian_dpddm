@@ -184,7 +184,7 @@ def main(args:DictConfig):
         logger['tpr'] = stats['dpddm_ood']
         
         ''' write self-log to file '''
-        csv_path = os.path.join(log_dir, f'results_{args.dataset.name}_{args.dpddm.data_sample_size}.csv')
+        csv_path = os.path.join(log_dir, f'results_{args.dataset.name}_{args.dpddm.data_sample_size}_final.csv')
         csv_exists = os.path.isfile(csv_path)
         
         with open(csv_path, 'a') as f:
