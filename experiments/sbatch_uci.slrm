@@ -18,7 +18,7 @@ source /pkgs/anaconda3/etc/profile.d/conda.sh
 conda activate dpddm
 
 # 3 sample sizes, 50 seeds per size
-DATA_SAMPLE_SIZES=(10 20 50)
+DATA_SAMPLE_SIZES=(100 200)
 SIZE_INDEX=$((SLURM_ARRAY_TASK_ID / 50))      # ← change: divide by 50 instead of 30
 SEED=$((30 + SLURM_ARRAY_TASK_ID % 50))  # Starts at seed=30 to avoid prior 0–29
 DATA_SAMPLE_SIZE=${DATA_SAMPLE_SIZES[$SIZE_INDEX]}
