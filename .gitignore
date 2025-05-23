@@ -18,3 +18,5 @@ experiments/data/
 .DS_Store
 .vscode/
 tmux*
+.ipynb_checkpoints/
+.idea/
