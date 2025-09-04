@@ -35,7 +35,7 @@ class MLPModel(DPDDMAbstractModel):
         for f in self.mid_fc:
             identity = x
             out = f(x)
-            out += identity
+            out = out + identity
             x = self.dropout(F.elu(out))
         
         return x

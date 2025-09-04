@@ -42,7 +42,7 @@ class DPDDMMonitor(ABC):
                  valset: Dataset,
                  train_cfg: TrainConfig,
                  device=torch.device,
-                 verbose=True):
+                 verbose=False):
         
         self.model = model
         self.trainset = trainset
@@ -63,12 +63,16 @@ class DPDDMMonitor(ABC):
                                       batch_size=train_cfg.batch_size, 
                                       shuffle=True, 
                                       num_workers=train_cfg.num_workers, 
-                                      pin_memory=train_cfg.pin_memory)
+                                      pin_memory=train_cfg.pin_memory,
+                                      persistent_workers=True,
+                                      )
         self.valloader = DataLoader(self.valset, 
                                     batch_size=train_cfg.batch_size, 
                                     shuffle=True, 
                                     num_workers=train_cfg.num_workers, 
-                                    pin_memory=train_cfg.pin_memory)
+                                    pin_memory=train_cfg.pin_memory,
+                                    persistent_workers=True
+                                    )
 
         self.output_metrics = {
             'train_loss': [],

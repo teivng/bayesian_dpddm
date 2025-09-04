@@ -1,0 +1,24 @@
+defaults:
+  - hydra: defaults
+  - train: civilcomments
+  - dataset: civilcomments
+  - dpddm: base
+  - model: bert_model
+  - wandb_cfg: wilds
+  - override hydra/hydra_logging: disabled
+  - override hydra/job_logging: disabled
+  - _self_
+
+monitor_type: bert
+from_pretrained: False 
+seed: 57
+self_log: False
+
+train:
+  num_workers: 6
+  batch_size: 256
+  num_epochs: 5
+  lr: 1e-4
+
+dataset:
+  frac: 1.0
